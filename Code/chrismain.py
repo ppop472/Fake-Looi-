@@ -13,7 +13,7 @@ import math
 class LeftEye(Widget):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
+                
         Window.maximize()
         maxSize = Window.system_size
         desiredSize = (maxSize[0]*1, maxSize[1]*1)
@@ -42,7 +42,7 @@ class LeftEye(Widget):
     
             #random vierkant op de left eye
             Color(1, 0, 0, 0)
-            Rectangle(pos=(self.maxwidth * 0.20 , self.maxheight * 0.30), 
+            Rectangle(pos=(self.maxwidth * 0.2 , self.maxheight * 0.3), 
                       size=(self.maxwidth * 0.2, self.maxheight * 0.4))
 
 class RightEye(Widget):
@@ -77,7 +77,7 @@ class RightEye(Widget):
     
             #random vierkant op de left eye
             Color(1, 0, 0, 0)
-            Rectangle(pos=(self.maxwidth * 0.60 , self.maxheight * 0.30), 
+            Rectangle(pos=(self.maxwidth * 0.6 , self.maxheight * 0.3), 
                       size=(self.maxwidth * 0.2, self.maxheight * 0.4))
 
 class MyFloatLayout(FloatLayout):
@@ -99,7 +99,10 @@ class MyFloatLayout(FloatLayout):
         self.desiredheight =self. maxSize[1] * 0.1
 
         self.radius = self.desiredRadius
-
+        
+        #Counter variabel voor de boos onclick ding
+        self.counter_boos = 0
+                
         #Background
         with self.canvas.before:
             Color(1, 1, 1, 1)
@@ -191,33 +194,43 @@ class MyFloatLayout(FloatLayout):
 
     #Emotions/Reaction Yeaaaa
         
-    def boos_reactie(self,touch):
+    def boos_reactie(self, touch):
         touch_x, touch_y = touch.pos
-        #left eye boos reactie position
-        print("Clicked at:","X:", touch_x, "Y:", touch_y)
-
+        
+        #Screen locatie van de boos right oog bepalen
         self.left_minwidth_boos = self.maxwidth * 0.2
         self.left_maxwidth_boos = self.maxwidth * 0.4
-
         self.left_minheight_boos = self.maxheight * 0.3 
         self.left_maxheight_boos = self.maxheight * 0.7
-
-        if touch_x > self.left_minwidth_boos and touch_x < self.left_maxwidth_boos and touch_y > self.left_minheight_boos and touch_y < self.left_maxheight_boos:
-            print("Left eye BOOS!")
-            self.boos_worden()
-
-        #right eye boos reactie position
+        
         self.right_minwidth_boos = self.maxwidth * 0.6
         self.right_maxwidth_boos = self.maxwidth * 0.8
-
         self.right_minheight_boos = self.maxheight * 0.3 
         self.right_maxheight_boos = self.maxheight * 0.7
+        
+        print("Clicked at:", "X:", touch_x, "Y:", touch_y)
 
-        if touch_x > self.right_minwidth_boos and touch_x < self.right_maxwidth_boos and touch_y > self.right_minheight_boos and touch_y < self.right_maxheight_boos:
-            print("Right eye BOOS!")
+        if (touch_x > self.right_minwidth_boos and
+            touch_x < self.right_maxwidth_boos and
+            touch_y > self.right_minheight_boos and
+            touch_y < self.right_maxheight_boos or
+            touch_x > self.left_minwidth_boos and 
+            touch_x < self.left_maxwidth_boos and 
+            touch_y > self.left_minheight_boos and 
+            touch_y < self.left_maxheight_boos):
+                self.counter_boos += 1
+                print("Counter incremented!")
+        else:
+            print("Touch event occurred outside the designated area.")
+        
+        print("Counter value:", self.counter_boos)
+        
+        if self.counter_boos == 10:
+            print("Right eye BOOS!", self.counter_boos)
             self.boos_worden()
 
     def noreactie(self):
+        self.counter_boos = 0
         self.right_eye.right_pupil_color.rgba = [0, 0, 0, 1]
         self.left_eye.left_pupil_color.rgba = [0, 0, 0, 1]
 
@@ -225,38 +238,31 @@ class MyFloatLayout(FloatLayout):
         self.right_eye.right_iris_color.rgba = [0.69, 0.86, 0.95, 1]
 
     def boos_worden(self):
-        #self.right_eye.right_pupil_color.rgba = [1, 0, 0, 0.9]
-        #self.left_eye.left_pupil_color.rgba = [1, 0, 0, 0.9]
-
         self.left_eye.left_iris_color.rgba = [1,0,0,0.8]
         self.right_eye.right_iris_color.rgba = [1,0,0,0.8]
-        self.start_timer_reactie(instance=None)
-        self.reset_timer_reactie()
+        self.start_timer_reactie_boos(instance=None)
+        self.reset_timer_reactie_boos()
 
     #Timer voor de Reacties
-    def start_timer_reactie(self, instance): 
-        self.time_limit_reactie = 2
-        self.start_time_reactie = time.time()     
-        self.elapsed_time_reactie = 0
-        self.start_time = time.time()
-        Clock.unschedule(self.update_timer_reactie)
-        Clock.schedule_interval(self.update_timer_reactie, 0.1)
+    def start_timer_reactie_boos(self, instance): 
+        self.time_limit_reactie_boos = 2
+        self.start_time_reactie_boos = time.time()     
+        self.elapsed_time_reactie_boos = 0
+        Clock.unschedule(self.update_timer_reactie_boos)
+        Clock.schedule_interval(self.update_timer_reactie_boos, 0.1)
 
-    def reset_timer_reactie(self):
+    def reset_timer_reactie_boos(self):
         self.start_time_reactie = time.time()
 
-    def update_timer_reactie(self, dt):
-        current_time_reactie = time.time()
-        elapsed_time_reactie = current_time_reactie - self.start_time_reactie
+    def update_timer_reactie_boos(self, dt):
+        current_time_reactie_boos = time.time()
+        elapsed_time_reactie_boos = current_time_reactie_boos - self.start_time_reactie_boos
 
-        if elapsed_time_reactie > self.time_limit_reactie:
-            Clock.unschedule(self.update_timer_reactie)
+        if elapsed_time_reactie_boos > self.time_limit_reactie_boos:
+            self.counter_boos = 0
+            Clock.unschedule(self.update_timer_reactie_boos)
             self.noreactie()
-
-    def restart_timer_reactie(self, instance):
-        self.reset_timer()
-        self.start_timer(instance)
-
+            
 class MyApp(App):
     def build(self):
         return MyFloatLayout()

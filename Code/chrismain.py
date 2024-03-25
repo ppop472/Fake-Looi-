@@ -2,6 +2,8 @@ from kivy.app import App
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.widget import Widget
 from kivy.graphics import Color, Ellipse, Rectangle
+from kivy.graphics import Color, Rectangle, PushMatrix, PopMatrix, Rotate
+from kivy.lang import Builder
 from kivy.uix.button import Button
 from kivy.clock import Clock
 from kivy.core.window import Window
@@ -9,6 +11,7 @@ from kivy.core.audio import SoundLoader
 import time
 from kivy.vector import Vector
 import math
+from kivy.graphics import Color, RoundedRectangle
 
 class LeftEye(Widget):
     def __init__(self, **kwargs):
@@ -40,11 +43,12 @@ class LeftEye(Widget):
             self.left_pupil = Ellipse(pos=(self.desiredwidth * 2.90,self.desiredheight * 4.6), 
                                 size=(self.maxwidth * 0.02 , self.maxheight * 0.08))
     
-            #random vierkant op de left eye
-            Color(1, 0, 0, 0)
-            Rectangle(pos=(self.maxwidth * 0.2 , self.maxheight * 0.3), 
-                      size=(self.maxwidth * 0.2, self.maxheight * 0.4))
-
+            #random vierkant boven de left eye
+            self.left_rectangle = Color(1, 1, 1, 1)
+            border_radius = (10, 1000, 10, 1000)  # Adjust the radius as needed
+            self.haha = RoundedRectangle(pos=(self.maxwidth * 0.18 , self.maxheight * 0.72), 
+                      size=(self.maxwidth * 0.24, self.maxheight * 0.015),
+                                        radius=border_radius)
 class RightEye(Widget):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -75,11 +79,15 @@ class RightEye(Widget):
             self.right_pupil = Ellipse(pos=(self.desiredwidth * 6.90,self.desiredheight * 4.6), 
                                 size=(self.maxwidth * 0.02 , self.maxheight * 0.08))
     
-            #random vierkant op de left eye
-            Color(1, 0, 0, 0)
-            Rectangle(pos=(self.maxwidth * 0.6 , self.maxheight * 0.3), 
-                      size=(self.maxwidth * 0.2, self.maxheight * 0.4))
-
+            #random vierkant boven de left eye  
+            self.right_rectangle = Color(1, 1, 1, 1)
+        
+            # Rectangle with border radius
+            border_radius = (1000, 10, 1000, 10)  # Adjust the radius as needed
+            self.haha = RoundedRectangle(pos=(self.maxwidth * 0.58, self.maxheight * 0.72),
+                                        size=(self.maxwidth * 0.24, self.maxheight * 0.015),
+                                        radius=border_radius)
+            
 class MyFloatLayout(FloatLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -237,15 +245,21 @@ class MyFloatLayout(FloatLayout):
         self.left_eye.left_iris_color.rgba = [0.69, 0.86, 0.95, 1]
         self.right_eye.right_iris_color.rgba = [0.69, 0.86, 0.95, 1]
 
+        self.left_eye.left_rectangle.rgba = (1,1,1,1)
+        self.right_eye.right_rectangle.rgba = (1,1,1,1)
+
     def boos_worden(self):
         self.left_eye.left_iris_color.rgba = [1,0,0,0.8]
         self.right_eye.right_iris_color.rgba = [1,0,0,0.8]
+        if hasattr(self.right_eye, 'haha'):
+            self.left_eye.left_rectangle.rgba = (0,0,0,1)
+            self.right_eye.right_rectangle.rgba = (0,0,0,1)
         self.start_timer_reactie_boos(instance=None)
         self.reset_timer_reactie_boos()
 
     #Timer voor de Reacties
     def start_timer_reactie_boos(self, instance): 
-        self.time_limit_reactie_boos = 2
+        self.time_limit_reactie_boos = 4
         self.start_time_reactie_boos = time.time()     
         self.elapsed_time_reactie_boos = 0
         Clock.unschedule(self.update_timer_reactie_boos)
@@ -253,6 +267,7 @@ class MyFloatLayout(FloatLayout):
 
     def reset_timer_reactie_boos(self):
         self.start_time_reactie = time.time()
+        self.counter_boos = 0
 
     def update_timer_reactie_boos(self, dt):
         current_time_reactie_boos = time.time()

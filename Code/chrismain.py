@@ -42,13 +42,7 @@ class LeftEye(Widget):
             self.left_pupil_radius = desiredRadius / 10
             self.left_pupil = Ellipse(pos=(self.desiredwidth * 2.90,self.desiredheight * 4.6), 
                                 size=(self.maxwidth * 0.02 , self.maxheight * 0.08))
-    
-            #random vierkant boven de left eye
-            self.left_rectangle = Color(1, 1, 1, 1)
-            border_radius = (10, 1000, 10, 1000)  # Adjust the radius as needed
-            self.haha = RoundedRectangle(pos=(self.maxwidth * 0.18 , self.maxheight * 0.72), 
-                      size=(self.maxwidth * 0.24, self.maxheight * 0.015),
-                                        radius=border_radius)
+            
 class RightEye(Widget):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -78,16 +72,51 @@ class RightEye(Widget):
             self.right_pupil_radius = desiredRadius / 10
             self.right_pupil = Ellipse(pos=(self.desiredwidth * 6.90,self.desiredheight * 4.6), 
                                 size=(self.maxwidth * 0.02 , self.maxheight * 0.08))
-    
-            #random vierkant boven de left eye  
-            self.right_rectangle = Color(1, 1, 1, 1)
-        
-            # Rectangle with border radius
-            border_radius = (1000, 10, 1000, 10)  # Adjust the radius as needed
-            self.haha = RoundedRectangle(pos=(self.maxwidth * 0.58, self.maxheight * 0.72),
-                                        size=(self.maxwidth * 0.24, self.maxheight * 0.015),
-                                        radius=border_radius)
             
+class LeftEyeBrows(Widget):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        Window.maximize()
+        maxSize = Window.system_size
+        desiredSize = (maxSize[0]*1, maxSize[1]*1)
+        Window.size = desiredSize
+
+        self.maxwidth = maxSize[0]
+        self.maxheight = maxSize[1]
+
+        border_radius = (10, 1000, 10, 1000)
+        self.left_eyebrows_angle = 0
+
+        with self.canvas:
+            self.rotate_left = Rotate(origin=(self.maxwidth * 0.2, self.maxheight * 0.72), angle=self.left_eyebrows_angle)
+            self.left_eyebrows_color = Color(rgb=(255, 255, 255))
+            self.left_eyebrows = Rectangle(pos=(self.maxwidth * 0.2, self.maxheight * 0.72), 
+                      size=(self.maxwidth * 0.2, self.maxheight * 0.015),
+                      radius=border_radius)
+        
+class RightEyeBrows(Widget):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        Window.maximize()
+        maxSize = Window.system_size
+        desiredSize = (maxSize[0]*1, maxSize[1]*1)
+        Window.size = desiredSize
+
+        self.maxwidth = maxSize[0]
+        self.maxheight = maxSize[1]
+
+        border_radius = (1000, 10, 1000, 10) 
+        self.right_eyebrows_angle = 0
+        
+        with self.canvas:
+            self.rotate_right = Rotate(origin=(self.maxwidth * 0.6, self.maxheight * 0.72), angle=self.right_eyebrows_angle)
+            self.right_eyebrows_color = Color(rgb=(255, 255, 255))
+            self.right_eyebrows = Rectangle(pos=(self.maxwidth * 0.6, self.maxheight * 0.72), 
+                      size=(self.maxwidth * 0.2, self.maxheight * 0.015),
+                      radius=border_radius)
+          
 class MyFloatLayout(FloatLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -121,6 +150,11 @@ class MyFloatLayout(FloatLayout):
         self.add_widget(self.left_eye)
         self.right_eye = RightEye()
         self.add_widget(self.right_eye)
+
+        self.left_eyebrows = LeftEyeBrows()
+        self.add_widget(self.left_eyebrows)
+        self.right_eyebrows = RightEyeBrows()
+        self.add_widget(self.right_eyebrows)
 
     #Movement DYING INSIDE
     def update_pupils(self, touch_x, touch_y):
@@ -227,37 +261,54 @@ class MyFloatLayout(FloatLayout):
             touch_y > self.left_minheight_boos and 
             touch_y < self.left_maxheight_boos):
                 self.counter_boos += 1
-                print("Counter incremented!")
-        else:
-            print("Touch event occurred outside the designated area.")
+                print("Counter increased!")
+                self.start_timer_reactie_boos(instance=None)
+                self.reset_timer_reactie_boos()
         
         print("Counter value:", self.counter_boos)
         
         if self.counter_boos == 10:
-            print("Right eye BOOS!", self.counter_boos)
+            print("BOOS!", self.counter_boos)
             self.boos_worden()
+            
 
     def noreactie(self):
         self.counter_boos = 0
+
+        #Ogen
         self.right_eye.right_pupil_color.rgba = [0, 0, 0, 1]
         self.left_eye.left_pupil_color.rgba = [0, 0, 0, 1]
 
         self.left_eye.left_iris_color.rgba = [0.69, 0.86, 0.95, 1]
         self.right_eye.right_iris_color.rgba = [0.69, 0.86, 0.95, 1]
 
-        self.left_eye.left_rectangle.rgba = (1,1,1,1)
-        self.right_eye.right_rectangle.rgba = (1,1,1,1)
+        #wenkbrauw
+        self.left_eyebrows.left_eyebrows_color.rgba = [1,1,1,1]
+        self.left_eyebrows.rotate_left.angle = 0
+
+
+        self.right_eyebrows.right_eyebrows_color.rgba = [1,1,1,1]
+        self.right_eyebrows.rotate_right.angle = 0
+        self.right_eyebrows.right_eyebrows.pos = (self.maxwidth * 0.6, self.maxheight * 0.72)
 
     def boos_worden(self):
         self.left_eye.left_iris_color.rgba = [1,0,0,0.8]
         self.right_eye.right_iris_color.rgba = [1,0,0,0.8]
+
+        self.left_eyebrows.left_eyebrows_color.rgba = [0,0,0,1]
+        self.left_eyebrows.rotate_left.angle = -5
+        self.left_eyebrows.left_eyebrows.pos = (self.maxwidth * 0.2, self.maxheight * 0.72)
+
+        self.right_eyebrows.right_eyebrows_color.rgba = [0,0,0,1]
+        self.right_eyebrows.rotate_right.angle = 10
+        self.right_eyebrows.right_eyebrows.pos = (self.maxwidth * 0.6, self.maxheight * 0.751)
+
         if hasattr(self.right_eye, 'haha'):
-            self.left_eye.left_rectangle.rgba = (0,0,0,1)
-            self.right_eye.right_rectangle.rgba = (0,0,0,1)
+            print("ïets")
         self.start_timer_reactie_boos(instance=None)
         self.reset_timer_reactie_boos()
 
-    #Timer voor de Reacties
+    #Timer voor de Boos reacties
     def start_timer_reactie_boos(self, instance): 
         self.time_limit_reactie_boos = 4
         self.start_time_reactie_boos = time.time()     
@@ -267,7 +318,6 @@ class MyFloatLayout(FloatLayout):
 
     def reset_timer_reactie_boos(self):
         self.start_time_reactie = time.time()
-        self.counter_boos = 0
 
     def update_timer_reactie_boos(self, dt):
         current_time_reactie_boos = time.time()

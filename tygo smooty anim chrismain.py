@@ -176,7 +176,8 @@ class MyFloatLayout(FloatLayout):
 
         if right_eye_distance > max_distance_right:
             right_eye_distance = max_distance_right
-
+            
+    # Anim smooth pupil UWU
         def update_pupils(self, touch_x, touch_y):
             left_eye_center = (self.maxwidth * 0.3, (self.maxheight * 0.5) - (self.maxwidth / 64))
             right_eye_center = (self.maxwidth * 0.7,  (self.maxheight * 0.5) - (self.maxwidth / 64))

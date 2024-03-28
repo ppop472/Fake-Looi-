@@ -134,8 +134,8 @@ class MyFloatLayout(FloatLayout):
         self.right_eyebrows = RightEyeBrows()
         self.add_widget(self.right_eyebrows)
         # Animaties en Blinking
-        self.start_idle_timer(instance=None)
-        rand_blonk = random.randint(7, 21)
+        self.start_idle_timer(instance=None) # Idle animation start
+        rand_blonk = random.randint(7, 21) # Random seconds for blinking
         Clock.schedule_interval(self.blink_animation, rand_blonk)  # Random Blinking
 
     # Movement DYING INSIDE
@@ -174,32 +174,6 @@ class MyFloatLayout(FloatLayout):
         self.update_pupils(touch.x, touch.y)
         self.restart_idle_timer(instance=None)  # Restart Idle timer on move - Szymon
 
-    # Idle timeywimey FUCK MY LIFE - Love, Szymon
-    def start_idle_timer(self, instance):
-        self.time_limit = random.randint(3, 12)
-        self.idle_time = time.time()
-        self.elapsed_time = 0
-        self.idle_time = time.time()
-        Clock.unschedule(self.update_idle_timer)
-        Clock.schedule_interval(self.update_idle_timer, 0.1)
-
-    def update_idle_timer(self, dt):
-        current_time = time.time()
-        elapsed_time = current_time - self.idle_time
-        if elapsed_time > self.time_limit:
-            self.is_idle = True
-            Clock.unschedule(self.update_idle_timer)
-            Clock.schedule_interval(self.idle_animation, 3)
-
-    def reset_idle_timer(self):
-        self.idle_time = time.time()
-
-    def restart_idle_timer(self, instance):
-        self.is_idle = False
-        self.reset_idle_timer()
-        self.start_idle_timer(instance)
-        Clock.unschedule(self.idle_animation)
-
     # Timer voor de pupilen
     def start_timer(self, instance):
         self.time_limit = 2
@@ -228,17 +202,6 @@ class MyFloatLayout(FloatLayout):
         self.movement_in_progress = True
         Clock.schedule_interval(self.move_pupil_back_smoothly, 0.0001)
 
-    # Mooie smooth animatie toegevoegd en idle timer toegevoegd - Sailmun
-    def move_pupil_back_smoothly(self):
-        right_eye_anim = Animation(pos=(self.desiredwidth * 6.90, self.desiredheight * 4.6),
-                                   duration=0.6, t='out_cubic')
-        right_eye_anim.start(self.right_eye.right_pupil)
-        left_eye_anim = Animation(pos=(self.desiredwidth * 2.90, self.desiredheight * 4.6),
-                                  duration=0.6, t='out_cubic')
-        left_eye_anim.start(self.left_eye.left_pupil)
-        self.right_eye.canvas.ask_update()
-        self.start_idle_timer(instance=None)
-
     # Emotions/Reaction Yeaaaa
     def boos_reactie(self, touch):
         touch_x, touch_y = touch.pos
@@ -259,12 +222,12 @@ class MyFloatLayout(FloatLayout):
             self.start_timer_reactie_boos(instance=None)
             self.reset_timer_reactie_boos()
         if self.counter_boos == 10:
-            self.is_boos = True
+            self.is_boos = True # Make Boolean True
             self.boos_worden()
 
     def noreactie(self):
         self.counter_boos = 0
-        self.is_boos = False
+        self.is_boos = False # Make Boolean False
         # Ogen
         self.right_eye.right_pupil_color.rgba = [0, 0, 0, 1]
         self.left_eye.left_pupil_color.rgba = [0, 0, 0, 1]
@@ -291,6 +254,33 @@ class MyFloatLayout(FloatLayout):
             print("ïets")
         self.start_timer_reactie_boos(instance=None)
         self.reset_timer_reactie_boos()
+
+    # Idle timeywimey FUCK MY LIFE - Love, Szymon
+
+    def start_idle_timer(self, instance):
+        self.time_limit = random.randint(3, 12)
+        self.idle_time = time.time()
+        self.elapsed_time = 0
+        self.idle_time = time.time()
+        Clock.unschedule(self.update_idle_timer)
+        Clock.schedule_interval(self.update_idle_timer, 0.1)
+
+    def update_idle_timer(self, dt):
+        current_time = time.time()
+        elapsed_time = current_time - self.idle_time
+        if elapsed_time > self.time_limit:
+            self.is_idle = True
+            Clock.unschedule(self.update_idle_timer)
+            Clock.schedule_interval(self.idle_animation, 3)
+
+    def reset_idle_timer(self):
+        self.idle_time = time.time()
+
+    def restart_idle_timer(self, instance):
+        self.is_idle = False
+        self.reset_idle_timer()
+        self.start_idle_timer(instance)
+        Clock.unschedule(self.idle_animation)
 
     # Timer voor de Boos reacties
     def start_timer_reactie_boos(self, instance):
@@ -355,6 +345,16 @@ class MyFloatLayout(FloatLayout):
         Clock.schedule_once(self.blink_blonk)
         Clock.schedule_once(self.un_blink_blonk, 0.2)
 
+    # Mooie smooth animatie toegevoegd en idle timer toegevoegd - Sailmun
+    def move_pupil_back_smoothly(self):
+        right_eye_anim = Animation(pos=(self.desiredwidth * 6.90, self.desiredheight * 4.6),
+                                   duration=0.6, t='out_cubic')
+        right_eye_anim.start(self.right_eye.right_pupil)
+        left_eye_anim = Animation(pos=(self.desiredwidth * 2.90, self.desiredheight * 4.6),
+                                  duration=0.6, t='out_cubic')
+        left_eye_anim.start(self.left_eye.left_pupil)
+        self.right_eye.canvas.ask_update()
+        self.start_idle_timer(instance=None)
 
 class MyApp(App):
     def build(self):

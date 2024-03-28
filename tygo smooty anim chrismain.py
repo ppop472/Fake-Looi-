@@ -178,6 +178,7 @@ class MyFloatLayout(FloatLayout):
             right_eye_distance = max_distance_right
             
     # Anim smooth pupil UWU
+    #--------------------------------------------------------------------------------------------------------------------
         def update_pupils(self, touch_x, touch_y):
             left_eye_center = (self.maxwidth * 0.3, (self.maxheight * 0.5) - (self.maxwidth / 64))
             right_eye_center = (self.maxwidth * 0.7,  (self.maxheight * 0.5) - (self.maxwidth / 64))
@@ -209,7 +210,7 @@ class MyFloatLayout(FloatLayout):
 
         animation_left_eye.start(self.left_eye.left_pupil)
         animation_right_eye.start(self.right_eye.right_pupil)
-
+#--------------------------------------------------------------------------------------------------------------------
         
         #new positie bullshit
         left_eye_pupil_x = left_eye_distance * math.cos(left_eye_angle) + left_eye_center[0] - 10

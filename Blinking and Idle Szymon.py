@@ -255,6 +255,26 @@ class MyFloatLayout(FloatLayout):
         self.start_timer_reactie_boos(instance=None)
         self.reset_timer_reactie_boos()
 
+        # Timer voor de Boos reacties
+
+    def start_timer_reactie_boos(self, instance):
+        self.time_limit_reactie_boos = 4
+        self.start_time_reactie_boos = time.time()
+        self.elapsed_time_reactie_boos = 0
+        Clock.unschedule(self.update_timer_reactie_boos)
+        Clock.schedule_interval(self.update_timer_reactie_boos, 0.1)
+
+    def reset_timer_reactie_boos(self):
+        self.start_time_reactie = time.time()
+
+    def update_timer_reactie_boos(self, dt):
+        current_time_reactie_boos = time.time()
+        elapsed_time_reactie_boos = current_time_reactie_boos - self.start_time_reactie_boos
+        if elapsed_time_reactie_boos > self.time_limit_reactie_boos:
+            self.counter_boos = 0
+            Clock.unschedule(self.update_timer_reactie_boos)
+            self.noreactie()
+    
     # Idle timeywimey FUCK MY LIFE - Love, Szymon
 
     def start_idle_timer(self, instance):
@@ -281,25 +301,6 @@ class MyFloatLayout(FloatLayout):
         self.reset_idle_timer()
         self.start_idle_timer(instance)
         Clock.unschedule(self.idle_animation)
-
-    # Timer voor de Boos reacties
-    def start_timer_reactie_boos(self, instance):
-        self.time_limit_reactie_boos = 4
-        self.start_time_reactie_boos = time.time()
-        self.elapsed_time_reactie_boos = 0
-        Clock.unschedule(self.update_timer_reactie_boos)
-        Clock.schedule_interval(self.update_timer_reactie_boos, 0.1)
-
-    def reset_timer_reactie_boos(self):
-        self.start_time_reactie = time.time()
-
-    def update_timer_reactie_boos(self, dt):
-        current_time_reactie_boos = time.time()
-        elapsed_time_reactie_boos = current_time_reactie_boos - self.start_time_reactie_boos
-        if elapsed_time_reactie_boos > self.time_limit_reactie_boos:
-            self.counter_boos = 0
-            Clock.unschedule(self.update_timer_reactie_boos)
-            self.noreactie()
 
     # Idle animation + Szymon
     # Make this shit smooth yay fuck my like cancer aids cunt

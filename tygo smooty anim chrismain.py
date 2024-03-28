@@ -179,25 +179,6 @@ class MyFloatLayout(FloatLayout):
             
     # Anim smooth pupil UWU
     #--------------------------------------------------------------------------------------------------------------------
-        def update_pupils(self, touch_x, touch_y):
-            left_eye_center = (self.maxwidth * 0.3, (self.maxheight * 0.5) - (self.maxwidth / 64))
-            right_eye_center = (self.maxwidth * 0.7,  (self.maxheight * 0.5) - (self.maxwidth / 64))
-
-            left_eye_distance = math.sqrt((touch_x - left_eye_center[0]) ** 2 + (touch_y - left_eye_center[1]) ** 2)
-            left_eye_angle = math.atan2(touch_y - left_eye_center[1], touch_x - left_eye_center[0])
-
-            right_eye_distance = math.sqrt((touch_x - right_eye_center[0]) ** 2 + (touch_y - right_eye_center[1]) ** 2)
-            right_eye_angle = math.atan2(touch_y - right_eye_center[1], touch_x - right_eye_center[0])
-
-            max_distance_left = self.maxwidth / 24
-            max_distance_right = self.maxwidth / 24
-
-            if left_eye_distance > max_distance_left:
-                left_eye_distance = max_distance_left
-
-            if right_eye_distance > max_distance_right:
-                right_eye_distance = max_distance_right
-
         # New positions
         left_eye_pupil_x = left_eye_distance * math.cos(left_eye_angle) + left_eye_center[0] - 10
         left_eye_pupil_y = left_eye_distance * math.sin(left_eye_angle) + left_eye_center[1] - 10

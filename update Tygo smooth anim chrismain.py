@@ -121,6 +121,10 @@ class RightEyeBrows(Widget):
 class MyFloatLayout(FloatLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        # boos sound
+        #----------------------------------------------------------------------------------
+        self.boos_sound = SoundLoader.load('grrrr Clash Royale (Official Video).mp3')
+        #----------------------------------------------------------------------------------
 
         # Variable of the screens
         Window.maximize()
@@ -344,6 +348,12 @@ class MyFloatLayout(FloatLayout):
 
         self.right_eyebrows.rotate_right.angle = 10
         self.right_eyebrows.right_eyebrows.pos = (self.maxwidth * 0.6, self.maxheight * 0.751)
+
+        if self.boos_sound:
+            # Play the sound
+            self.boos_sound.play()
+        else:
+            print("Error: Sound file not loaded.")
     #---------------------------------------------------------------------------------------------------------------------------------------------
 
     #Timer voor de Boos reacties

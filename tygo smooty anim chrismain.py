@@ -157,6 +157,7 @@ class MyFloatLayout(FloatLayout):
         self.right_eyebrows = RightEyeBrows()
         self.add_widget(self.right_eyebrows)
 
+
     #Movement DYING INSIDE
     def update_pupils(self, touch_x, touch_y):
         left_eye_center = (self.maxwidth * 0.3, (self.maxheight * 0.5) - (self.maxwidth / 64))
@@ -176,22 +177,6 @@ class MyFloatLayout(FloatLayout):
 
         if right_eye_distance > max_distance_right:
             right_eye_distance = max_distance_right
-            
-    # Anim smooth pupil UWU
-    #--------------------------------------------------------------------------------------------------------------------
-        # New positions
-        left_eye_pupil_x = left_eye_distance * math.cos(left_eye_angle) + left_eye_center[0] - 10
-        left_eye_pupil_y = left_eye_distance * math.sin(left_eye_angle) + left_eye_center[1] - 10
-        right_eye_pupil_x = right_eye_distance * math.cos(right_eye_angle) + right_eye_center[0] - 10
-        right_eye_pupil_y = right_eye_distance * math.sin(right_eye_angle) + right_eye_center[1] - 10
-
-        # Smooth animation using Kivy's Animation class
-        animation_left_eye = Animation(pos=(left_eye_pupil_x, left_eye_pupil_y), duration=0.2)
-        animation_right_eye = Animation(pos=(right_eye_pupil_x, right_eye_pupil_y), duration=0.2)
-
-        animation_left_eye.start(self.left_eye.left_pupil)
-        animation_right_eye.start(self.right_eye.right_pupil)
-#--------------------------------------------------------------------------------------------------------------------
         
         #new positie bullshit
         left_eye_pupil_x = left_eye_distance * math.cos(left_eye_angle) + left_eye_center[0] - 10
@@ -294,6 +279,18 @@ class MyFloatLayout(FloatLayout):
 
     def noreactie(self):
         self.counter_boos = 0
+        # animatie ogen normaal
+        #---------------------------------------------------------------------------------------------------------------------------------------------
+        start_left_iris_color = self.left_eye.left_iris_color.rgba
+        start_right_iris_color = self.right_eye.right_iris_color.rgba
+        end_left_iris_color = [0.69, 0.86, 0.95, 1]
+        end_right_iris_color = [0.69, 0.86, 0.95, 1]
+
+        anim_left_iris = Animation(r=end_left_iris_color[0], g=end_left_iris_color[1], b=end_left_iris_color[2], duration=1.5)
+        anim_right_iris = Animation(r=end_right_iris_color[0], g=end_right_iris_color[1], b=end_right_iris_color[2], duration=1.5)
+
+        anim_left_iris.start(self.left_eye.left_iris_color)
+        anim_right_iris.start(self.right_eye.right_iris_color)
 
         #Ogen
         self.right_eye.right_pupil_color.rgba = [0, 0, 0, 1]
@@ -310,23 +307,44 @@ class MyFloatLayout(FloatLayout):
         self.right_eyebrows.right_eyebrows_color.rgba = [1,1,1,1]
         self.right_eyebrows.rotate_right.angle = 0
         self.right_eyebrows.right_eyebrows.pos = (self.maxwidth * 0.6, self.maxheight * 0.72)
+        #--------------------------------------------------------------------------------------------------------------------------------------------- 
 
+    #Taigooooooooooooooooooo
+    #---------------------------------------------------------------------------------------------------------------------------------------------
     def boos_worden(self):
-        self.left_eye.left_iris_color.rgba = [1,0,0,0.8]
-        self.right_eye.right_iris_color.rgba = [1,0,0,0.8]
 
-        self.left_eyebrows.left_eyebrows_color.rgba = [0,0,0,1]
+        # Animatie iris color
+        start_left_iris_color = self.left_eye.left_iris_color.rgba
+        start_right_iris_color = self.right_eye.right_iris_color.rgba
+        end_left_iris_color = [1, 0, 0, 0.8]
+        end_right_iris_color = [1, 0, 0, 0.8]
+
+        # Animatie eyebrow color
+        start_eyebrow_left_color = self.left_eyebrows.left_eyebrows_color.rgba
+        start_eyebrow_right_color = self.right_eyebrows.right_eyebrows_color.rgba
+        end_eyebrow_left_color = [0, 0, 0, 1]
+        end_eyebrow_right_color = [0, 0, 0, 1]  
+
+        # Animatie voor de left/right iris and eyebrow
+        anim_left_iris = Animation(r=end_left_iris_color[0], g=end_left_iris_color[1], b=end_left_iris_color[2], duration=1)
+        anim_right_iris = Animation(r=end_right_iris_color[0], g=end_right_iris_color[1], b=end_right_iris_color[2], duration=1)
+        anim_eyebrow_left = Animation(r=end_eyebrow_left_color[0], g=end_eyebrow_left_color[1], b=end_eyebrow_left_color[2], duration=1)
+        anim_eyebrow_right = Animation(r=end_eyebrow_right_color[0], g=end_eyebrow_right_color[1], b=end_eyebrow_right_color[2], duration=1)
+        
+
+        # Start animations Iris and Eyebrow
+        anim_left_iris.start(self.left_eye.left_iris_color)
+        anim_right_iris.start(self.right_eye.right_iris_color)
+        anim_eyebrow_left.start(self.left_eyebrows.left_eyebrows_color)
+        anim_eyebrow_right.start(self.right_eyebrows.right_eyebrows_color)
+
+        # Position eyebrow
         self.left_eyebrows.rotate_left.angle = -5
         self.left_eyebrows.left_eyebrows.pos = (self.maxwidth * 0.2, self.maxheight * 0.72)
 
-        self.right_eyebrows.right_eyebrows_color.rgba = [0,0,0,1]
         self.right_eyebrows.rotate_right.angle = 10
         self.right_eyebrows.right_eyebrows.pos = (self.maxwidth * 0.6, self.maxheight * 0.751)
-
-        if hasattr(self.right_eye, 'haha'):
-            print("ïets")
-        self.start_timer_reactie_boos(instance=None)
-        self.reset_timer_reactie_boos()
+    #---------------------------------------------------------------------------------------------------------------------------------------------
 
     #Timer voor de Boos reacties
     def start_timer_reactie_boos(self, instance): 

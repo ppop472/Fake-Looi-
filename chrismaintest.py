@@ -1,7 +1,7 @@
 from kivy.app import App
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.widget import Widget
-from kivy.graphics import Color, Ellipse, Rectangle, Line
+from kivy.graphics import Color, Ellipse, Rectangle, Line, Bezier
 from kivy.graphics import Color, Rectangle, PushMatrix, PopMatrix, Rotate
 from kivy.lang import Builder
 from kivy.uix.button import Button
@@ -78,7 +78,7 @@ class RightEye(Widget):
             
 class BendLines(Widget):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super(BendLines, self).__init__(**kwargs)
 
         Window.maximize()
         maxSize = Window.system_size
@@ -87,15 +87,57 @@ class BendLines(Widget):
 
         self.maxwidth = maxSize[0]
         self.maxheight = maxSize[1]
+
+        self.line_width = 5
+
+        self.cp1_x_left = self.maxwidth * 0.2
+        self.cp1_y_left = self.maxheight * 0.75
+        self.cp2_x_left = self.maxwidth * 0.3
+        self.cp2_y_left = self.maxheight * 0.75
+        self.cp3_x_left = self.maxwidth * 0.4
+        self.cp3_y_left = self.maxheight * 0.75
+
+        self.cp1_x_right = self.maxwidth * 0.8
+        self.cp1_y_right = self.maxheight * 0.75
+        self.cp2_x_right = self.maxwidth * 0.7
+        self.cp2_y_right = self.maxheight * 0.75
+        self.cp3_x_right = self.maxwidth * 0.6
+        self.cp3_y_right = self.maxheight * 0.75
         
+        self.draw_bezier_left()
+        self.draw_bezier_right()
+
+    def draw_bezier_left(self):
+        self.canvas.clear()
         with self.canvas:
-            self.line_left_color = Color(rgba=(0, 0, 0, 0))
-            self.line_left = Line(bezier=[self.maxwidth * 0.2, self.maxheight * 0.75,
-                                          self.maxwidth * 0.4, self.maxheight * 0.75], width = 5)
+            self.line_left_color = Color(0, 0, 0, 1)
+            self.line_left = Line(bezier=[self.cp1_x_left, self.cp1_y_left,
+                                           self.cp2_x_left, self.cp2_y_left,
+                                           self.cp3_x_left, self.cp3_y_left], width=self.line_width)
+
+    def draw_bezier_right(self):
+        with self.canvas:
+            self.line_right_color = Color(0, 0, 0, 1)
+            self.line_right = Line(bezier=[self.cp1_x_right, self.cp1_y_right,
+                                            self.cp2_x_right, self.cp2_y_right,
+                                            self.cp3_x_right, self.cp3_y_right], width=self.line_width)
             
-            self.line_right_color = Color(rgba=(0, 0, 0, 0))
-            self.line_right = Line(bezier=[self.maxwidth * 0.8, self.maxheight * 0.75,
-                                          self.maxwidth * 0.6, self.maxheight * 0.75], width = 5)
+    def animate_control_points(self, cp1_left, cp2_left, cp3_left, cp1_right, cp2_right, cp3_right, duration):
+        anim_left = Animation(cp1_x_left=cp1_left[0], cp1_y_left=cp1_left[1],
+                              cp2_x_left=cp2_left[0], cp2_y_left=cp2_left[1],
+                              cp3_x_left=cp3_left[0], cp3_y_left=cp3_left[1], duration=duration)
+        anim_left.bind(on_progress=self.update_line)
+        anim_left.start(self)
+
+        anim_right = Animation(cp1_x_right=cp1_right[0], cp1_y_right=cp1_right[1],
+                               cp2_x_right=cp2_right[0], cp2_y_right=cp2_right[1],
+                               cp3_x_right=cp3_right[0], cp3_y_right=cp3_right[1], duration=duration)
+        anim_right.bind(on_progress=self.update_line)
+        anim_right.start(self)
+            
+    def update_line(self, instance, value, progression):
+        self.draw_bezier_left()
+        self.draw_bezier_right()
 
 class MyFloatLayout(FloatLayout):
     def __init__(self, **kwargs):
@@ -322,60 +364,46 @@ class MyFloatLayout(FloatLayout):
             
 
     def noreactie(self):
-        start_left_iris_color = self.left_eye.left_iris_color.rgba
-        start_right_iris_color = self.right_eye.right_iris_color.rgba
-        end_left_iris_color = [0.69, 0.86, 0.95, 1]
-        end_right_iris_color = [0.69, 0.86, 0.95, 1]
-
-        anim_left_iris = Animation(r=end_left_iris_color[0], g=end_left_iris_color[1], b=end_left_iris_color[2], duration=1.5)
-        anim_right_iris = Animation(r=end_right_iris_color[0], g=end_right_iris_color[1], b=end_right_iris_color[2], duration=1.5)
-
-        anim_left_iris.start(self.left_eye.left_iris_color)
-        anim_right_iris.start(self.right_eye.right_iris_color)
-        #Ogen
+        # Ogen
         self.right_eye.right_pupil_color.rgba = [0, 0, 0, 1]
         self.left_eye.left_pupil_color.rgba = [0, 0, 0, 1]
 
         self.left_eye.left_iris_color.rgba = [0.69, 0.86, 0.95, 1]
         self.right_eye.right_iris_color.rgba = [0.69, 0.86, 0.95, 1]
 
-        #wenkbrauw
-        self.bendlines.line_left_color.rgba = (0,0,0,0)
-        self.bendlines.line_right_color.rgba = (0,0,0,0)
-        self.bendlines.line_left.bezier = [self.maxwidth * 0.2, self.maxheight * 0.75,
-                                          self.maxwidth * 0.4, self.maxheight * 0.75]
-        
-        self.bendlines.line_right.bezier = [self.maxwidth * 0.8, self.maxheight * 0.75,
-                                          self.maxwidth * 0.6, self.maxheight * 0.75]
+        #Wenkbrouw
+        cp1_left = [self.maxwidth * 0.2, self.maxheight * 0.75]
+        cp2_left = [self.maxwidth * 0.3, self.maxheight * 0.75]
+        cp3_left = [self.maxwidth * 0.4, self.maxheight * 0.75]
+        cp1_right = [self.maxwidth * 0.8, self.maxheight * 0.75]
+        cp2_right = [self.maxwidth * 0.7, self.maxheight * 0.75]
+        cp3_right = [self.maxwidth * 0.6, self.maxheight * 0.75]
+        self.bendlines.animate_control_points(cp1_left, cp2_left, cp3_left, cp1_right, cp2_right, cp3_right, 0.1)
 
+        # Call function to start the timer for the reaction
         self.start_timer_reactie_sad(instance=None)
-
 # BOOS HAHAHAHAH
     def boos_worden(self):
+        self.left_eye.left_iris_color.rgba = [1,0,0,0.8]
+        self.right_eye.right_iris_color.rgba = [1,0,0,0.8]
+
         self.boos_worden_bool = True
-        # Animatie iris color
 
-        end_left_iris_color = [1, 0, 0, 0.8]
-        end_right_iris_color = [1, 0, 0, 0.8]
+        #Wenkbrouwen
+        cp1_left = [self.maxwidth * 0.2, self.maxheight * 0.75]
+        cp2_left = [self.maxwidth * 0.40, self.maxheight * 0.75]
+        cp3_left = [self.maxwidth * 0.45, self.maxheight * 0.65]
+        cp1_right = [self.maxwidth * 0.8, self.maxheight * 0.75]
+        cp2_right = [self.maxwidth * 0.6, self.maxheight * 0.75]
+        cp3_right = [self.maxwidth * 0.55, self.maxheight * 0.65]
 
-        # Animatie voor de left/right iris and eyebrow
-        anim_left_iris = Animation(r=end_left_iris_color[0], g=end_left_iris_color[1], b=end_left_iris_color[2], duration=1)
-        anim_right_iris = Animation(r=end_right_iris_color[0], g=end_right_iris_color[1], b=end_right_iris_color[2], duration=1)
-        # Start animations Iris and Eyebrow
-        anim_left_iris.start(self.left_eye.left_iris_color)
-        anim_right_iris.start(self.right_eye.right_iris_color)
+        self.bendlines.animate_control_points(cp1_left, cp2_left, cp3_left, cp1_right, cp2_right, cp3_right, 0.1)
 
+        Animation(rgba=(0, 0, 1, 1)).start(self.bendlines.line_left_color)
 
-        self.bendlines.line_left_color.rgba = (0,0,0,1)
-        self.bendlines.line_right_color.rgba = (0,0,0,1)
-        self.bendlines.line_left.bezier = [self.maxwidth * 0.2, self.maxheight * 0.75,
-                                          self.maxwidth * 0.4, self.maxheight * 0.75,
-                                          self.maxwidth * 0.45, self. maxheight * 0.65]
+        self.bendlines.animate_control_points(cp1_left, cp2_left, cp3_left, cp1_right, cp2_right, cp3_right, 0.1)
+
         
-        self.bendlines.line_right.bezier = [self.maxwidth * 0.8, self.maxheight * 0.75,
-                                          self.maxwidth * 0.6, self.maxheight * 0.75,
-                                          self.maxwidth * 0.55, self. maxheight * 0.65]
-
         self.start_timer_reactie_boos(instance=None)
         self.reset_timer_reactie_boos()
 
@@ -408,16 +436,15 @@ class MyFloatLayout(FloatLayout):
         
             
     def sad_worden(self):
-       #wenkbrouwen
-       self.bendlines.line_left_color.rgba = (0,0,0,1)
-       self.bendlines.line_right_color.rgba = (0,0,0,1)
-       self.bendlines.line_left.bezier = [self.maxwidth * 0.2, self.maxheight * 0.75,
-                                          self.maxwidth * 0.4, self.maxheight * 0.75,
-                                          self.maxwidth * 0.45, self. maxheight * 0.8]
-        
-       self.bendlines.line_right.bezier = [self.maxwidth * 0.8, self.maxheight * 0.75,
-                                          self.maxwidth * 0.6, self.maxheight * 0.75,
-                                          self.maxwidth * 0.55, self. maxheight * 0.8]
+        #wenkbrouwen
+        cp1_left = [self.maxwidth * 0.2, self.maxheight * 0.75]
+        cp2_left = [self.maxwidth * 0.40, self.maxheight * 0.75]
+        cp3_left = [self.maxwidth * 0.45, self.maxheight * 0.85]
+        cp1_right = [self.maxwidth * 0.8, self.maxheight * 0.75]
+        cp2_right = [self.maxwidth * 0.6, self.maxheight * 0.75]
+        cp3_right = [self.maxwidth * 0.55, self.maxheight * 0.85]
+
+        self.bendlines.animate_control_points(cp1_left, cp2_left, cp3_left, cp1_right, cp2_right, cp3_right, 0.1)
 
     def start_timer_reactie_sad(self, instance): 
         self.time_limit_reactie_sad = 30

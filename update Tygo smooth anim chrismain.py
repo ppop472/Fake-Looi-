@@ -10,6 +10,7 @@ from kivy.core.window import Window
 from kivy.core.audio import SoundLoader
 from kivy.animation import Animation
 import time
+import random
 from kivy.vector import Vector
 import math
 from kivy.graphics import Color, RoundedRectangle
@@ -121,10 +122,15 @@ class RightEyeBrows(Widget):
 class MyFloatLayout(FloatLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        # boos sound
+        # boos/verdrietig sound
         #----------------------------------------------------------------------------------
         self.boos_sound = SoundLoader.load('grrrr Clash Royale (Official Video).mp3')
+        self.verdrietig_sound = SoundLoader.load('Clash Royale skeleton cry emote sound but loud.mp3')
         #----------------------------------------------------------------------------------
+
+        self.restart_idle_timer(instance=None)
+        self.boos_worden_bool = False
+        self.start_timer_reactie_sad(instance=None)
 
         # Variable of the screens
         Window.maximize()
@@ -283,6 +289,7 @@ class MyFloatLayout(FloatLayout):
 
     def noreactie(self):
         self.counter_boos = 0
+        self.sad_var = False
         # animatie ogen normaal
         #---------------------------------------------------------------------------------------------------------------------------------------------
         start_left_iris_color = self.left_eye.left_iris_color.rgba
@@ -375,7 +382,119 @@ class MyFloatLayout(FloatLayout):
             self.counter_boos = 0
             Clock.unschedule(self.update_timer_reactie_boos)
             self.noreactie()
+
+   # SAD BRUHUUHUHU AFK REACTIE     
+    def sad_worden_bepalen(self):
+        if not self.boos_worden_bool:
+            print("not boos sad")
+            self.sad_worden()
+        
             
+    def sad_worden(self):
+        self.left_eyebrows.left_eyebrows_color.rgba = [0,0,0,1]
+        self.left_eyebrows.rotate_left.angle = 5
+        self.left_eyebrows.left_eyebrows.pos = (self.maxwidth * 0.2, self.maxheight * 0.72)
+
+        self.right_eyebrows.right_eyebrows_color.rgba = [0,0,0,1]
+        self.right_eyebrows.rotate_right.angle = -10
+        self.right_eyebrows.right_eyebrows.pos = (self.maxwidth * 0.6, self.maxheight * 0.685)
+# Verdrietig sound
+#---------------------------------------------------------------------------------------------
+        if self.verdrietig_sound:
+            # Play the sound
+            self.verdrietig_sound.play()
+        else:
+            print("Error: Sound file not loaded.")
+#---------------------------------------------------------------------------------------------
+
+    def start_timer_reactie_sad(self, instance): 
+        self.time_limit_reactie_sad = 30
+        self.start_time_reactie_sad = time.time()     
+        self.elapsed_time_reactie_sad = 0
+        Clock.unschedule(self.update_timer_reactie_sad)
+        Clock.schedule_interval(self.update_timer_reactie_sad, 0.1)
+
+    def reset_timer_reactie_sad(self):
+        self.start_time_reactie_sad = time.time()
+
+    def update_timer_reactie_sad(self, dt):
+        current_time_reactie_sad = time.time()
+        elapsed_time_reactie_sad = current_time_reactie_sad - self.start_time_reactie_sad
+
+        if elapsed_time_reactie_sad > self.time_limit_reactie_sad:
+            self.counter_sad = 0
+            Clock.unschedule(self.update_timer_reactie_sad)
+            self.sad_worden_bepalen()
+    
+    #Idle animatie DISDISDISDISDIS    
+    def start_idle_timer(self, instance):
+        self.time_limit = random.randint(3, 12)
+        self.idle_time = time.time()
+        self.elapsed_time = 0
+        self.idle_time = time.time()
+        Clock.unschedule(self.update_idle_timer)
+        Clock.schedule_interval(self.update_idle_timer, 0.1)
+
+    def update_idle_timer(self, dt):
+        current_time = time.time()
+        elapsed_time = current_time - self.idle_time
+        if elapsed_time > self.time_limit:
+            self.is_idle = True
+            Clock.unschedule(self.update_idle_timer)
+            Clock.schedule_interval(self.idle_animation, 3)
+
+    def reset_idle_timer(self):
+        self.idle_time = time.time()
+
+    def restart_idle_timer(self, instance):
+        self.is_idle = False
+        self.reset_idle_timer()
+        self.start_idle_timer(instance)
+        Clock.unschedule(self.idle_animation)
+
+    #Idle animation disdisdisdis
+    def idle_animation(self, dt):
+        # random direction vector
+        direction = Vector(random.uniform(-1, 1), random.uniform(-1, 1)).normalize()
+        # eye center calculation
+        left_eye_center = (self.maxwidth * 0.3, (self.maxheight * 0.5) - (self.maxwidth / 64))
+        right_eye_center = (self.maxwidth * 0.7, (self.maxheight * 0.5) - (self.maxwidth / 64))
+        # Give pupils position for goofy random
+        left_pupil_anim = Animation(pos=(left_eye_center[0] + direction[0] * self.maxwidth / 24,
+                                         left_eye_center[1] + direction[1] * self.maxwidth / 24), duration=0.6,
+                                    t='out_cubic')
+        right_pupil_anim = Animation(pos=(right_eye_center[0] + direction[0] * self.maxwidth / 24,
+                                          right_eye_center[1] + direction[1] * self.maxwidth / 24), duration=0.6,
+                                     t='out_cubic')
+        # quirky anim starts
+        left_pupil_anim.start(self.left_eye.left_pupil)
+        right_pupil_anim.start(self.right_eye.right_pupil)
+
+    #Knipperen KNIPKNIPKNIP HAHA
+    def blink_blonk(self, dt):
+        self.left_eye.left_pupil_color.a = 0
+        self.right_eye.right_pupil_color.a = 0
+        if self.boos_worden_bool:
+            self.left_eye.left_iris_color.rgba = (0.7, 0, 0, 1)
+            self.right_eye.right_iris_color.rgba = (0.7, 0, 0, 1)
+        elif not self.boos_worden_bool:
+            self.right_eye.right_iris_color.rgba = (0.59, 0.76, 0.85, 1)
+            self.left_eye.left_iris_color.rgba = (0.59, 0.76, 0.85, 1)
+
+    def un_blink_blonk(self, dt):
+        self.left_eye.left_pupil_color.a = 1
+        self.right_eye.right_pupil_color.a = 1
+        if self.boos_worden_bool:
+            self.left_eye.left_iris_color.rgba = (1, 0, 0, 0.8)
+            self.right_eye.right_iris_color.rgba = (1, 0, 0, 0.8)
+        elif not self.boos_worden_bool:
+            self.left_eye.left_iris_color.rgba = (0.69, 0.86, 0.95, 1)
+            self.right_eye.right_iris_color.rgba = (0.69, 0.86, 0.95, 1)
+
+    def blink_animation(self, dt):
+        Clock.schedule_once(self.blink_blonk)
+        Clock.schedule_once(self.un_blink_blonk, 0.2)
+
 class MyApp(App):
     def build(self):
         return MyFloatLayout()

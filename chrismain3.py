@@ -364,12 +364,19 @@ class MyFloatLayout(FloatLayout):
             
 
     def noreactie(self):
+        if not self.boos_worden_bool:
+            angry_recover = Animation(rgba=(0.69, 0.86, 0.95, 1))
+            angry_recover_eyebrow = Animation(rgba=(0,0,0,0))
+
+            angry_recover.start(self.right_eye.right_iris_color)
+            angry_recover.start(self.left_eye.left_iris_color)
+            angry_recover_eyebrow.start(self.bendlines.line_left_color)
+            angry_recover_eyebrow.start(self.bendlines.line_right_color)
+
         # Ogen
         self.right_eye.right_pupil_color.rgba = [0, 0, 0, 1]
         self.left_eye.left_pupil_color.rgba = [0, 0, 0, 1]
 
-        self.left_eye.left_iris_color.rgba = [0.69, 0.86, 0.95, 1]
-        self.right_eye.right_iris_color.rgba = [0.69, 0.86, 0.95, 1]
 
         #Wenkbrouw
         cp1_left = [self.maxwidth * 0.2, self.maxheight * 0.75]
@@ -382,11 +389,26 @@ class MyFloatLayout(FloatLayout):
 
         # Call function to start the timer for the reaction
         self.start_timer_reactie_sad(instance=None)
-# BOOS HAHAHAHAH
-    def boos_worden(self):
-        self.left_eye.left_iris_color.rgba = [1,0,0,0.8]
-        self.right_eye.right_iris_color.rgba = [1,0,0,0.8]
 
+# BOOS HAHAHAHAH
+
+    def boos_worden_anim(self):  
+
+            # Animatie voor de left/right iris 
+            anim_angy_mode = Animation(rgba=(1,0,0,1))
+            anim_angry_eyebrow = Animation(rgba=(0,0,0,1))
+            # Start eyebrows
+            anim_angry_eyebrow.start(self.bendlines.line_left_color)
+            anim_angry_eyebrow.start(self.bendlines.line_right_color)
+
+            # Start animations Iris
+            anim_angy_mode.start(self.left_eye.left_iris_color)
+            anim_angy_mode.start(self.right_eye.right_iris_color)
+
+    def boos_worden(self):
+
+        self.boos_worden_anim()  # Play boos function when it turns angy wangy - Szy Szy
+        self.boos_worden_bool = True
         self.boos_worden_bool = True
 
         #Wenkbrouwen

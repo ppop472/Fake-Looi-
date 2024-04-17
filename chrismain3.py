@@ -1,3 +1,5 @@
+# from kivy.config import Config
+# Config.set('input', 'mouse', 'mouse,disable_multitouch')
 from kivy.app import App
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.widget import Widget
@@ -139,6 +141,12 @@ class BendLines(Widget):
         self.draw_bezier_left()
         self.draw_bezier_right()
 
+#ASSETS 
+
+class Assests(Widget):
+    def __init__(self, **kwargs):
+        super(Assests, self).__init__(**kwargs)
+
 class MyFloatLayout(FloatLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -146,8 +154,8 @@ class MyFloatLayout(FloatLayout):
         # AFK / VERDRIETIGE emotie/reactie
         self.restart_idle_timer(instance=None)
         self.boos_worden_bool = False
+        self.sad_worden_bool = False
         self.start_timer_reactie_sad(instance=None)
-
         # Variable of the screens
         Window.maximize()
         self.maxSize = Window.system_size
@@ -163,10 +171,6 @@ class MyFloatLayout(FloatLayout):
         self.desiredheight =self. maxSize[1] * 0.1
 
         self.radius = self.desiredRadius
-
-        #Geluiden
-        self.boos_sound = SoundLoader.load('grrrr Clash Royale (Official Video).mp3')
-        self.verdrietig_sound = SoundLoader.load('Clash Royale skeleton cry emote sound but loud.mp3')
         
         #Counter variabel voor de boos onclick ding
         self.counter_boos = 0
@@ -189,7 +193,7 @@ class MyFloatLayout(FloatLayout):
 
         self.bendlines = BendLines()
         self.add_widget(self.bendlines)
-        
+
     #Movement DYING INSIDE
     def update_pupils(self, touch_x, touch_y):
         left_eye_center = (self.maxwidth * 0.3, (self.maxheight * 0.5) - (self.maxwidth / 64))
@@ -269,6 +273,7 @@ class MyFloatLayout(FloatLayout):
 
         #reacties
         self.boos_reactie(touch)
+        self.johnson_wenkbrouwen(touch)
 
     def on_touch_up(self,touch):
         if not self.boos_worden_bool:
@@ -341,6 +346,35 @@ class MyFloatLayout(FloatLayout):
         
         print("Clicked at:", "X:", touch_x, "Y:", touch_y)
 
+        #Wenkbrouw beweging bij boos counter increase
+        if (self.counter_boos < 10 and not self.boos_worden_bool and
+            touch_x > self.right_minwidth_boos and
+            touch_x < self.right_maxwidth_boos and
+            touch_y > self.right_minheight_boos and
+            touch_y < self.right_maxheight_boos):
+
+                cp1_left = [self.maxwidth * 0.2, self.maxheight * 0.75]
+                cp2_left = [self.maxwidth * 0.3, self.maxheight * 0.75]
+                cp3_left = [self.maxwidth * 0.4, self.maxheight * 0.75]
+                cp1_right = [self.maxwidth * 0.8, self.maxheight * 0.75]
+                cp2_right = [self.maxwidth * 0.7, self.maxheight * 0.70]
+                cp3_right = [self.maxwidth * 0.6, self.maxheight * 0.75]
+                self.bendlines.animate_control_points(cp1_left, cp2_left, cp3_left, cp1_right, cp2_right, cp3_right, 0.1)
+
+        if (self.counter_boos < 10 and not self.boos_worden_bool and
+            touch_x > self.left_minwidth_boos and 
+            touch_x < self.left_maxwidth_boos and 
+            touch_y > self.left_minheight_boos and 
+            touch_y < self.left_maxheight_boos):
+
+                cp1_left = [self.maxwidth * 0.2, self.maxheight * 0.75]
+                cp2_left = [self.maxwidth * 0.3, self.maxheight * 0.70]
+                cp3_left = [self.maxwidth * 0.4, self.maxheight * 0.75]
+                cp1_right = [self.maxwidth * 0.8, self.maxheight * 0.75]
+                cp2_right = [self.maxwidth * 0.7, self.maxheight * 0.75]
+                cp3_right = [self.maxwidth * 0.6, self.maxheight * 0.75]
+                self.bendlines.animate_control_points(cp1_left, cp2_left, cp3_left, cp1_right, cp2_right, cp3_right, 0.1)
+
         if (touch_x > self.right_minwidth_boos and
             touch_x < self.right_maxwidth_boos and
             touch_y > self.right_minheight_boos and
@@ -364,6 +398,7 @@ class MyFloatLayout(FloatLayout):
             
 
     def noreactie(self):
+        self.sad_worden_bool = False
         if not self.boos_worden_bool:
             angry_recover = Animation(rgba=(0.69, 0.86, 0.95, 1))
             angry_recover_eyebrow = Animation(rgba=(0,0,0,0))
@@ -389,26 +424,82 @@ class MyFloatLayout(FloatLayout):
 
         # Call function to start the timer for the reaction
         self.start_timer_reactie_sad(instance=None)
+        
+    #Dwayne Jhonson wenkbrouwen link/rechts
 
-# BOOS HAHAHAHAH
+    def johnson_wenkbrouwen(self,touch):
+        touch_x, touch_y = touch.pos
 
-    def boos_worden_anim(self):  
+        self.left_minwidth_johnson = self.maxwidth * 0.0
+        self.left_maxwidth_johnson = self.maxwidth * 0.2
+        self.left_minheight_johnson = self.maxheight * 0
+        self.left_maxheight_johnson = self.maxheight * 1
+        
+        self.right_minwidth_johnson = self.maxwidth * 0.8
+        self.right_maxwidth_johnson = self.maxwidth * 1
+        self.right_minheight_johnson = self.maxheight * 0 
+        self.right_maxheight_johnson = self.maxheight * 1
 
-            # Animatie voor de left/right iris 
-            anim_angy_mode = Animation(rgba=(1,0,0,1))
-            anim_angry_eyebrow = Animation(rgba=(0,0,0,1))
-            # Start eyebrows
-            anim_angry_eyebrow.start(self.bendlines.line_left_color)
-            anim_angry_eyebrow.start(self.bendlines.line_right_color)
+        #Wenkbrouw right
+        if (self.counter_boos < 10 and not self.boos_worden_bool and not self.sad_worden_bool and
+            touch_x > self.right_minwidth_johnson and
+            touch_x < self.right_maxwidth_johnson and
+            touch_y > self.right_minheight_johnson and
+            touch_y < self.right_maxheight_johnson):
+                
+                dwayne_sound = "Dwayne.wav"
+                self.sound_dwayne = SoundLoader.load(dwayne_sound)
+                if self.sound_dwayne:
+                    self.sound_dwayne.play()
+                    print(dwayne_sound, "is playing...")
 
-            # Start animations Iris
-            anim_angy_mode.start(self.left_eye.left_iris_color)
-            anim_angy_mode.start(self.right_eye.right_iris_color)
+                cp1_left = [self.maxwidth * 0.2, self.maxheight * 0.75]
+                cp2_left = [self.maxwidth * 0.3, self.maxheight * 0.75]
+                cp3_left = [self.maxwidth * 0.4, self.maxheight * 0.75]
+                cp1_right = [self.maxwidth * 0.8, self.maxheight * 0.85]
+                cp2_right = [self.maxwidth * 0.7, self.maxheight * 0.90]
+                cp3_right = [self.maxwidth * 0.6, self.maxheight * 0.85]
+                self.bendlines.animate_control_points(cp1_left, cp2_left, cp3_left, cp1_right, cp2_right, cp3_right, 0.1)
+
+        #Wenkbrouw left
+        if (self.counter_boos < 10 and not self.boos_worden_bool and not self.sad_worden_bool and
+            touch_x > self.left_minwidth_johnson and 
+            touch_x < self.left_maxwidth_johnson and 
+            touch_y > self.left_minheight_johnson and 
+            touch_y < self.left_maxheight_johnson):
+                
+                dwayne_sound = "Dwayne.wav"
+                self.sound_dwayne = SoundLoader.load(dwayne_sound)
+                if self.sound_dwayne:
+                    self.sound_dwayne.play()
+                    print(dwayne_sound, "is playing...")
+                
+                cp1_left = [self.maxwidth * 0.2, self.maxheight * 0.85]
+                cp2_left = [self.maxwidth * 0.3, self.maxheight * 0.90]
+                cp3_left = [self.maxwidth * 0.4, self.maxheight * 0.85]
+                cp1_right = [self.maxwidth * 0.8, self.maxheight * 0.75]
+                cp2_right = [self.maxwidth * 0.7, self.maxheight * 0.75]
+                cp3_right = [self.maxwidth * 0.6, self.maxheight * 0.75]
+                self.bendlines.animate_control_points(cp1_left, cp2_left, cp3_left, cp1_right, cp2_right, cp3_right, 0.1)
+
+    #BOOS HAHAHAHAH
+
+    def boos_worden_anim(self):
+
+        # Animatie voor de left/right iris 
+        anim_angy_mode = Animation(rgba=(1,0,0,1))
+        anim_angry_eyebrow = Animation(rgba=(0,0,0,1))
+        # Start eyebrows
+        anim_angry_eyebrow.start(self.bendlines.line_left_color)
+        anim_angry_eyebrow.start(self.bendlines.line_right_color)
+
+        # Start animations Iris
+        anim_angy_mode.start(self.left_eye.left_iris_color)
+        anim_angy_mode.start(self.right_eye.right_iris_color)
 
     def boos_worden(self):
 
         self.boos_worden_anim()  # Play boos function when it turns angy wangy - Szy Szy
-        self.boos_worden_bool = True
         self.boos_worden_bool = True
 
         #Wenkbrouwen
@@ -423,7 +514,13 @@ class MyFloatLayout(FloatLayout):
 
         self.bendlines.animate_control_points(cp1_left, cp2_left, cp3_left, cp1_right, cp2_right, cp3_right, 0.1)
 
-        
+        #Boos sound
+        angry_sound = "Angry LOUI.wav"
+        self.sound_boos = SoundLoader.load(angry_sound)
+        if self.sound_boos:
+            self.sound_boos.play()
+            print(angry_sound, "is playing...")
+
         self.start_timer_reactie_boos(instance=None)
         self.reset_timer_reactie_boos()
 
@@ -456,6 +553,8 @@ class MyFloatLayout(FloatLayout):
         
             
     def sad_worden(self):
+
+        self.sad_worden_bool = True
         #wenkbrouwen
         cp1_left = [self.maxwidth * 0.2, self.maxheight * 0.75]
         cp2_left = [self.maxwidth * 0.40, self.maxheight * 0.75]
@@ -465,6 +564,13 @@ class MyFloatLayout(FloatLayout):
         cp3_right = [self.maxwidth * 0.55, self.maxheight * 0.85]
 
         self.bendlines.animate_control_points(cp1_left, cp2_left, cp3_left, cp1_right, cp2_right, cp3_right, 0.1)
+
+        #Sad sound haha
+        sad_sound = "Sad LOUI.wav"
+        self.sound_sad = SoundLoader.load(sad_sound)
+        if self.sound_sad:
+            self.sound_sad.play()
+            print(sad_sound, "is playing...")
 
     def start_timer_reactie_sad(self, instance): 
         self.time_limit_reactie_sad = 30

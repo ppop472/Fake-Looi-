@@ -160,10 +160,10 @@ class AngryPulse(Widget):
         with self.canvas:
             self.angry_img = Image(source='Angry-Symbol.png')
             self.angry_img.size_hint = (None, None)
-            self.angry_img.size = (200, 200)
-            self.angry_img.pos = (1100, 450)
+            self.angry_img.size = (self.maxwidth * 0.02, self.maxheight * 0.02)
+            self.angry_img.pos = (self.maxwidth * 0.75, self.maxheight * 0.6)
 
-            anim = Animation(size=(150, 150), duration=0.35) + Animation(size=(100, 100), duration=0.35)
+            anim = Animation(size=(self.maxwidth * 0.18, self.maxheight * 0.18), duration=0.35) + Animation(size=(self.maxwidth * 0.22, self.maxheight * 0.22), duration=0.35)
             anim.repeat = True
             anim.start(self.angry_img)
 

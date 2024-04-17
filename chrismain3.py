@@ -142,10 +142,20 @@ class BendLines(Widget):
         self.draw_bezier_right()
 
 #ASSETS 
-
 class Assests(Widget):
     def __init__(self, **kwargs):
         super(Assests, self).__init__(**kwargs)
+
+        Window.maximize()
+        maxSize = Window.system_size
+        desiredSize = (maxSize[0]*1, maxSize[1]*1)
+        Window.size = desiredSize
+
+        self.maxwidth = maxSize[0]
+        self.maxheight = maxSize[1]
+
+        self.line_width = 5 
+
 
 class MyFloatLayout(FloatLayout):
     def __init__(self, **kwargs):

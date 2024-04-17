@@ -14,6 +14,7 @@ from kivy.core.audio import SoundLoader
 import time
 from kivy.vector import Vector
 import random
+from kivy.uix.image import Image
 import math
 from kivy.graphics import Color, RoundedRectangle
 
@@ -154,12 +155,98 @@ class Assests(Widget):
         self.maxwidth = maxSize[0]
         self.maxheight = maxSize[1]
 
-        self.line_width = 5 
+        self.line_width = 10
+        self.line_width2 = 15
 
+        #Boos logo cordinaten
+            #Line 1
+        self.cp1_x_angry_1 = self.maxwidth * 0.87
+        self.cp1_y_angry_1 = self.maxheight * 0.91  
+        self.cp2_x_angry_1 = self.maxwidth * 0.87   
+        self.cp2_y_angry_1 = self.maxheight * 0.83  
+        self.cp3_x_angry_1 = self.maxwidth * 0.83   
+        self.cp3_y_angry_1 = self.maxheight * 0.83  
+            #Line2
+        self.cp1_x_angry_2 = self.maxwidth * 0.89   
+        self.cp1_y_angry_2 = self.maxheight * 0.91  
+        self.cp2_x_angry_2 = self.maxwidth * 0.89   
+        self.cp2_y_angry_2 = self.maxheight * 0.83  
+        self.cp3_x_angry_2 = self.maxwidth * 0.93   
+        self.cp3_y_angry_2 = self.maxheight * 0.83  
+
+            #Line3
+        self.cp1_x_angry_3 = self.maxwidth * 0.83   
+        self.cp1_y_angry_3 = self.maxheight * 0.79  
+        self.cp2_x_angry_3 = self.maxwidth * 0.87   
+        self.cp2_y_angry_3 = self.maxheight * 0.79  
+        self.cp3_x_angry_3 = self.maxwidth * 0.87   
+        self.cp3_y_angry_3 = self.maxheight * 0.715  
+
+         #Line4
+        self.cp1_x_angry_4 = self.maxwidth * 0.89   
+        self.cp1_y_angry_4 = self.maxheight * 0.715  
+        self.cp2_x_angry_4 = self.maxwidth * 0.89   
+        self.cp2_y_angry_4 = self.maxheight * 0.79  
+        self.cp3_x_angry_4 = self.maxwidth * 0.93   
+        self.cp3_y_angry_4 = self.maxheight * 0.79 
+        self.draw_angry_logo()
+
+    #Boos logo
+    def draw_angry_logo(self):
+        #BORDER 
+            with self.canvas:
+                self.angry_logo_border_color1 = Color(0, 0, 0, 0)
+                self.angry_logo_border_line1 = Line(bezier=[self.cp1_x_angry_1, self.cp1_y_angry_1,
+                                                    self.cp2_x_angry_1, self.cp2_y_angry_1,
+                                                    self.cp3_x_angry_1, self.cp3_y_angry_1], width=self.line_width2)
+            with self.canvas:
+                self.angry_logo_border_color2 = Color(0, 0, 0, 0)
+                self.angry_logo_border_line2 = Line(bezier=[self.cp1_x_angry_2, self.cp1_y_angry_2,
+                                                    self.cp2_x_angry_2, self.cp2_y_angry_2,
+                                                    self.cp3_x_angry_2, self.cp3_y_angry_2], width=self.line_width2)
+                
+            with self.canvas:
+                self.angry_logo_border_color3 = Color(0, 0, 0, 0)
+                self.angry_logo_border_line3 = Line(bezier=[self.cp1_x_angry_3, self.cp1_y_angry_3,
+                                                    self.cp2_x_angry_3, self.cp2_y_angry_3,
+                                                    self.cp3_x_angry_3, self.cp3_y_angry_3], width=self.line_width2)
+                
+            with self.canvas:
+                self.angry_logo_border_color4 = Color(0, 0, 0, 0)
+                self.angry_logo_border_line4 = Line(bezier=[self.cp1_x_angry_4, self.cp1_y_angry_4,
+                                                    self.cp2_x_angry_4, self.cp2_y_angry_4,
+                                                    self.cp3_x_angry_4, self.cp3_y_angry_4], width=self.line_width2)
+        #Lines
+            with self.canvas:
+                self.angry_logo_color1 = Color(1, 0, 0, 0)
+                self.angry_logo_line1 = Line(bezier=[self.cp1_x_angry_1, self.cp1_y_angry_1,
+                                                    self.cp2_x_angry_1, self.cp2_y_angry_1,
+                                                    self.cp3_x_angry_1, self.cp3_y_angry_1], width=self.line_width)
+                
+            with self.canvas:
+                self.angry_logo_color2 = Color(1, 0, 0, 0)
+                self.angry_logo_line2 = Line(bezier=[self.cp1_x_angry_2, self.cp1_y_angry_2,
+                                                    self.cp2_x_angry_2, self.cp2_y_angry_2,
+                                                    self.cp3_x_angry_2, self.cp3_y_angry_2], width=self.line_width)
+                
+            with self.canvas:
+                self.angry_logo_color3 = Color(1, 0, 0, 0)
+                self.angry_logo_line3 = Line(bezier=[self.cp1_x_angry_3, self.cp1_y_angry_3,
+                                                    self.cp2_x_angry_3, self.cp2_y_angry_3,
+                                                    self.cp3_x_angry_3, self.cp3_y_angry_3], width=self.line_width)
+                
+            with self.canvas:
+                self.angry_logo_color4 = Color(1, 0, 0, 0)
+                self.angry_logo_line4 = Line(bezier=[self.cp1_x_angry_4, self.cp1_y_angry_4,
+                                                    self.cp2_x_angry_4, self.cp2_y_angry_4,
+                                                    self.cp3_x_angry_4, self.cp3_y_angry_4], width=self.line_width)
+                
 
 class MyFloatLayout(FloatLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
+        self.img = Image(source ='angry anime logo.png') 
 
         # AFK / VERDRIETIGE emotie/reactie
         self.restart_idle_timer(instance=None)
@@ -203,6 +290,9 @@ class MyFloatLayout(FloatLayout):
 
         self.bendlines = BendLines()
         self.add_widget(self.bendlines)
+
+        self.assets = Assests()
+        self.add_widget(self.assets)
 
     #Movement DYING INSIDE
     def update_pupils(self, touch_x, touch_y):
@@ -422,6 +512,17 @@ class MyFloatLayout(FloatLayout):
         self.right_eye.right_pupil_color.rgba = [0, 0, 0, 1]
         self.left_eye.left_pupil_color.rgba = [0, 0, 0, 1]
 
+        #Angry logo
+            #Lines
+        self.assets.angry_logo_color1.rgba = (1, 0, 0, 0)
+        self.assets.angry_logo_color2.rgba = (1, 0, 0, 0)
+        self.assets.angry_logo_color3.rgba = (1, 0, 0, 0)
+        self.assets.angry_logo_color4.rgba = (1, 0, 0, 0)
+            #Borders
+        self.assets.angry_logo_border_color1.rgba = (0, 0, 0, 0)
+        self.assets.angry_logo_border_color2.rgba = (0, 0, 0, 0)
+        self.assets.angry_logo_border_color3.rgba = (0, 0, 0, 0)
+        self.assets.angry_logo_border_color4.rgba = (0, 0, 0, 0)
 
         #Wenkbrouw
         cp1_left = [self.maxwidth * 0.2, self.maxheight * 0.75]
@@ -531,6 +632,19 @@ class MyFloatLayout(FloatLayout):
             self.sound_boos.play()
             print(angry_sound, "is playing...")
 
+        #Angry logo
+            #Lines
+        self.assets.angry_logo_color1.rgba = (1, 0, 0, 1)
+        self.assets.angry_logo_color2.rgba = (1, 0, 0, 1)
+        self.assets.angry_logo_color3.rgba = (1, 0, 0, 1)
+        self.assets.angry_logo_color4.rgba = (1, 0, 0, 1)
+            #Border
+        self.assets.angry_logo_border_color1.rgba = (0, 0, 0, 1)
+        self.assets.angry_logo_border_color2.rgba = (0, 0, 0, 1)
+        self.assets.angry_logo_border_color3.rgba = (0, 0, 0, 1)
+        self.assets.angry_logo_border_color4.rgba = (0, 0, 0, 1)
+
+        #Timers
         self.start_timer_reactie_boos(instance=None)
         self.reset_timer_reactie_boos()
 

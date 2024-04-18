@@ -96,14 +96,14 @@ class BendLines(Widget):
         self.cp1_x_left = self.maxwidth * 0.2
         self.cp1_y_left = self.maxheight * 0.75
         self.cp2_x_left = self.maxwidth * 0.3
-        self.cp2_y_left = self.maxheight * 0.75
+        self.cp2_y_left = self.maxheight * 0.79
         self.cp3_x_left = self.maxwidth * 0.4
         self.cp3_y_left = self.maxheight * 0.75
 
         self.cp1_x_right = self.maxwidth * 0.8
         self.cp1_y_right = self.maxheight * 0.75
         self.cp2_x_right = self.maxwidth * 0.7
-        self.cp2_y_right = self.maxheight * 0.75
+        self.cp2_y_right = self.maxheight * 0.79
         self.cp3_x_right = self.maxwidth * 0.6
         self.cp3_y_right = self.maxheight * 0.75
         
@@ -373,7 +373,10 @@ class MyFloatLayout(FloatLayout):
 
         #reacties
         self.boos_reactie(touch)
-        self.johnson_wenkbrouwen(touch)
+        self.johnson_wenkbrauwen(touch)
+        self.middle_area_wenkbrauwen(touch)
+        self.middle_bottom_area_wenkbrauwen(touch)
+        self.middle_top_area_wenkbrauwen(touch)
 
     def on_touch_up(self,touch):
         if not self.boos_worden_bool:
@@ -538,7 +541,7 @@ class MyFloatLayout(FloatLayout):
         
     #Dwayne Jhonson wenkbrouwen link/rechts
 
-    def johnson_wenkbrouwen(self,touch):
+    def johnson_wenkbrauwen(self,touch):
         touch_x, touch_y = touch.pos
 
         self.left_minwidth_johnson = self.maxwidth * 0.0
@@ -593,8 +596,83 @@ class MyFloatLayout(FloatLayout):
                 cp3_right = [self.maxwidth * 0.6, self.maxheight * 0.75]
                 self.bendlines.animate_control_points(cp1_left, cp2_left, cp3_left, cp1_right, cp2_right, cp3_right, 0.1)
 
-    #BOOS HAHAHAHAH
+    #Tussen de ogen positie wenkbrouwen
+    def middle_area_wenkbrauwen(self,touch):
+        touch_x, touch_y = touch.pos
 
+        self.minwidth_middle_area = self.maxwidth * 0.4
+        self.maxwidth_middle_area = self.maxwidth * 0.6
+        self.minheight_middle_area = self.maxheight * 0.3
+        self.maxheight_middle_area = self.maxheight * 0.7
+
+        if (self.counter_boos < 10 and not self.boos_worden_bool and not self.sad_worden_bool and
+           touch_x > self.minwidth_middle_area and
+           touch_x < self.maxwidth_middle_area and
+           touch_y > self.minheight_middle_area and
+           touch_y < self.maxheight_middle_area):
+                  
+                cp1_left = [self.maxwidth * 0.2, self.maxheight * 0.75]
+                cp2_left = [self.maxwidth * 0.3, self.maxheight * 0.78]
+                cp3_left = [self.maxwidth * 0.4, self.maxheight * 0.78]
+
+                cp1_right = [self.maxwidth * 0.8, self.maxheight * 0.75]
+                cp2_right = [self.maxwidth * 0.7, self.maxheight * 0.78]
+                cp3_right = [self.maxwidth * 0.6, self.maxheight * 0.78]
+
+                self.bendlines.animate_control_points(cp1_left, cp2_left, cp3_left, cp1_right, cp2_right, cp3_right, 0.1)
+
+    #Tussen de ogen onderaan wenkbrouwen positie
+    def middle_top_area_wenkbrauwen(self,touch):
+        touch_x, touch_y = touch.pos
+
+        self.minwidth_middle_area_top = self.maxwidth * 0.4
+        self.maxwidth_middle_area_top = self.maxwidth * 0.6
+        self.minheight_middle_area_top = self.maxheight * 0.7
+        self.maxheight_middle_area_top = self.maxheight * 1
+
+        if (self.counter_boos < 10 and not self.boos_worden_bool and not self.sad_worden_bool and
+           touch_x > self.minwidth_middle_area_top and
+           touch_x < self.maxwidth_middle_area_top and
+           touch_y > self.minheight_middle_area_top and
+           touch_y < self.maxheight_middle_area_top):
+                   
+                cp1_left = [self.maxwidth * 0.2, self.maxheight * 0.75]
+                cp2_left = [self.maxwidth * 0.3, self.maxheight * 0.80]
+                cp3_left = [self.maxwidth * 0.4, self.maxheight * 0.82]
+
+                cp1_right = [self.maxwidth * 0.8, self.maxheight * 0.75]
+                cp2_right = [self.maxwidth * 0.7, self.maxheight * 0.80]
+                cp3_right = [self.maxwidth * 0.6, self.maxheight * 0.82]
+
+                self.bendlines.animate_control_points(cp1_left, cp2_left, cp3_left, cp1_right, cp2_right, cp3_right, 0.1)
+    
+
+    #Tussen de ogen onderaan wenkbrouwen positie
+    def middle_bottom_area_wenkbrauwen(self,touch):
+        touch_x, touch_y = touch.pos
+
+        self.minwidth_middle_area_bottom = self.maxwidth * 0.4
+        self.maxwidth_middle_area_bottom = self.maxwidth * 0.6
+        self.minheight_middle_area_bottom = self.maxheight * 0
+        self.maxheight_middle_area_bottom = self.maxheight * 0.3
+
+        if (self.counter_boos < 10 and not self.boos_worden_bool and not self.sad_worden_bool and
+           touch_x > self.minwidth_middle_area_bottom and
+           touch_x < self.maxwidth_middle_area_bottom and
+           touch_y > self.minheight_middle_area_bottom and
+           touch_y < self.maxheight_middle_area_bottom):
+                   
+                cp1_left = [self.maxwidth * 0.2, self.maxheight * 0.75]
+                cp2_left = [self.maxwidth * 0.3, self.maxheight * 0.75]
+                cp3_left = [self.maxwidth * 0.4, self.maxheight * 0.72]
+
+                cp1_right = [self.maxwidth * 0.8, self.maxheight * 0.75]
+                cp2_right = [self.maxwidth * 0.7, self.maxheight * 0.75]
+                cp3_right = [self.maxwidth * 0.6, self.maxheight * 0.72]
+
+                self.bendlines.animate_control_points(cp1_left, cp2_left, cp3_left, cp1_right, cp2_right, cp3_right, 0.1)
+
+    #BOOS HAHAHAHAH
     def boos_worden_anim(self):
 
         # Animatie voor de left/right iris 

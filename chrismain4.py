@@ -366,7 +366,7 @@ class MyFloatLayout(FloatLayout):
         self.update_pupils(touch.x, touch.y)
         self.restart_idle_timer(instance=None)
         if not self.boos_worden_bool:
-            self.noreactie()
+            #self.noreactie()
             self.start_timer_reactie_sad(instance=None)
 
         #reacties
@@ -375,7 +375,7 @@ class MyFloatLayout(FloatLayout):
 
     def on_touch_up(self,touch):
         if not self.boos_worden_bool:
-            self.noreactie()
+            #self.noreactie()
             self.start_timer_reactie_sad(instance=None)
 
     def on_touch_move(self, touch):
@@ -384,7 +384,7 @@ class MyFloatLayout(FloatLayout):
         self.reset_timer()
         self.update_pupils_drag(touch.x, touch.y)
         if not self.boos_worden_bool:
-            self.noreactie()
+            #self.noreactie()
             self.start_timer_reactie_sad(instance=None)
 
     #Timer voor de pupilen

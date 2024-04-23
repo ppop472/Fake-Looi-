@@ -272,7 +272,9 @@ class MyFloatLayout(FloatLayout):
         #Counter variabel voor de boos onclick ding
         self.counter_boos = 0
 
+        #Boolians voor de areas wenkbrauwen
         self.bool_rechts_links = False
+        self.bool_middle_area = False
 
         #Bink variableren :P
         self.start_idle_timer(instance=None) # Idle animation start
@@ -366,17 +368,17 @@ class MyFloatLayout(FloatLayout):
         self.update_pupils(touch.x, touch.y)
         self.restart_idle_timer(instance=None)
         if not self.boos_worden_bool:
-            #self.noreactie()
             self.start_timer_reactie_sad(instance=None)
+
+        if self.sad_worden_bool:
+            self.noreactie()
 
         #reacties
         self.boos_reactie(touch)
-        self.rechts_links_reactie(touch)
-
-    def on_touch_up(self,touch):
-        if not self.boos_worden_bool:
-            #self.noreactie()
-            self.start_timer_reactie_sad(instance=None)
+        self.rechts_links_area_reactie(touch)
+        self.middle_area_reactie(touch)
+        self.top_area_reactie(touch)
+        self.bottom_area_reactie(touch)
 
     def on_touch_move(self, touch):
         self.restart_idle_timer(instance=None)
@@ -384,8 +386,10 @@ class MyFloatLayout(FloatLayout):
         self.reset_timer()
         self.update_pupils_drag(touch.x, touch.y)
         if not self.boos_worden_bool:
-            #self.noreactie()
             self.start_timer_reactie_sad(instance=None)
+
+        if self.sad_worden_bool:
+            self.noreactie()
 
     #Timer voor de pupilen
     def start_timer(self, instance): 
@@ -426,7 +430,8 @@ class MyFloatLayout(FloatLayout):
         self.right_eye.canvas.ask_update()
         self.start_idle_timer(instance=None)
     
-    def rechts_links_reactie(self,touch):
+    #Rechts en Links reactie wenkbrauwen
+    def rechts_links_area_reactie(self,touch):
         touch_x, touch_y = touch.pos
         
         self.left_minwidth_johnson = self.maxwidth * 0.0
@@ -444,6 +449,13 @@ class MyFloatLayout(FloatLayout):
             touch_x < self.right_maxwidth_johnson and
             touch_y > self.right_minheight_johnson and
             touch_y < self.right_maxheight_johnson):
+                
+                confused_sound = "Confused LOUI.wav"
+                self.sound_confused = SoundLoader.load(confused_sound)
+                if self.sound_confused:
+                    self.sound_confused.play()
+                    print(confused_sound, "is playing...")
+
                 self.bool_rechts_links = True
                 self.rechts_area()
 
@@ -453,6 +465,11 @@ class MyFloatLayout(FloatLayout):
             touch_x < self.left_maxwidth_johnson and 
             touch_y > self.left_minheight_johnson and 
             touch_y < self.left_maxheight_johnson):
+                confused_sound = "Confused LOUI.wav"
+                self.sound_confused = SoundLoader.load(confused_sound)
+                if self.sound_confused:
+                    self.sound_confused.play()
+                    print(confused_sound, "is playing...")
                 self.bool_rechts_links = True
                 self.links_area()
 
@@ -465,6 +482,9 @@ class MyFloatLayout(FloatLayout):
                 cp2_right = [self.maxwidth * 0.7, self.maxheight * 0.90]
                 cp3_right = [self.maxwidth * 0.6, self.maxheight * 0.85]
                 self.bendlines.animate_control_points(cp1_left, cp2_left, cp3_left, cp1_right, cp2_right, cp3_right, 0.1)
+                self.bool_rechts_links = False
+                self.start_timer_reactie_areas(instance=None)
+                self.reset_timer_reactie_areas()
 
     def links_area(self):    
             if self.bool_rechts_links:
@@ -474,8 +494,119 @@ class MyFloatLayout(FloatLayout):
                 cp1_right = [self.maxwidth * 0.8, self.maxheight * 0.75]
                 cp2_right = [self.maxwidth * 0.7, self.maxheight * 0.75]
                 cp3_right = [self.maxwidth * 0.6, self.maxheight * 0.75]
-                self.bendlines.animate_control_points(cp1_left, cp2_left, cp3_left, cp1_right, cp2_right, cp3_right, 0.1)       
+                self.bendlines.animate_control_points(cp1_left, cp2_left, cp3_left, cp1_right, cp2_right, cp3_right, 0.1)   
+                self.bool_rechts_links = False
+                self.start_timer_reactie_areas(instance=None)
+                self.reset_timer_reactie_areas() 
 
+    #Under middle area wenkbrauwen
+    def bottom_area_reactie(self,touch):
+        touch_x, touch_y = touch.pos
+
+        self.minwidth_middle_area_bottom = self.maxwidth * 0.4
+        self.maxwidth_middle_area_bottom = self.maxwidth * 0.6
+        self.minheight_middle_area_bottom = self.maxheight * 0
+        self.maxheight_middle_area_bottom = self.maxheight * 0.3
+
+        if (self.counter_boos < 10 and not self.boos_worden_bool and not self.sad_worden_bool and
+           touch_x > self.minwidth_middle_area_bottom and
+           touch_x < self.maxwidth_middle_area_bottom and
+           touch_y > self.minheight_middle_area_bottom and
+           touch_y < self.maxheight_middle_area_bottom):
+                self.bottom_area()
+
+    def bottom_area(self):
+        cp1_left = [self.maxwidth * 0.2, self.maxheight * 0.75]
+        cp2_left = [self.maxwidth * 0.3, self.maxheight * 0.75]
+        cp3_left = [self.maxwidth * 0.4, self.maxheight * 0.72]
+        cp1_right = [self.maxwidth * 0.8, self.maxheight * 0.75]
+        cp2_right = [self.maxwidth * 0.7, self.maxheight * 0.75]
+        cp3_right = [self.maxwidth * 0.6, self.maxheight * 0.72]
+
+        self.bendlines.animate_control_points(cp1_left, cp2_left, cp3_left, cp1_right, cp2_right, cp3_right, 0.1)
+        self.start_timer_reactie_areas(instance=None)
+        self.reset_timer_reactie_areas() 
+
+    #Middle area reactie wenkbrauwen
+    def middle_area_reactie(self,touch):
+        touch_x, touch_y = touch.pos
+
+        self.minwidth_middle_area = self.maxwidth * 0.4
+        self.maxwidth_middle_area = self.maxwidth * 0.6
+        self.minheight_middle_area = self.maxheight * 0.3
+        self.maxheight_middle_area = self.maxheight * 0.7
+
+        if (self.counter_boos < 10 and not self.boos_worden_bool and not self.sad_worden_bool and
+           touch_x > self.minwidth_middle_area and
+           touch_x < self.maxwidth_middle_area and
+           touch_y > self.minheight_middle_area and
+           touch_y < self.maxheight_middle_area):
+                self.bool_middle_area = True
+                self.middle_area()
+
+    def middle_area(self):
+        cp1_left = [self.maxwidth * 0.2, self.maxheight * 0.75]
+        cp2_left = [self.maxwidth * 0.3, self.maxheight * 0.78]
+        cp3_left = [self.maxwidth * 0.4, self.maxheight * 0.78]
+        cp1_right = [self.maxwidth * 0.8, self.maxheight * 0.75]
+        cp2_right = [self.maxwidth * 0.7, self.maxheight * 0.78]
+        cp3_right = [self.maxwidth * 0.6, self.maxheight * 0.78]
+
+        self.bool_middle_area = False
+        self.bendlines.animate_control_points(cp1_left, cp2_left, cp3_left, cp1_right, cp2_right, cp3_right, 0.1)
+        self.start_timer_reactie_areas(instance=None)
+        self.reset_timer_reactie_areas() 
+
+    #Top middle area wenkbrauwen
+    def top_area_reactie(self, touch):
+        touch_x, touch_y = touch.pos
+        
+        self.minwidth_middle_area_top = self.maxwidth * 0.4
+        self.maxwidth_middle_area_top = self.maxwidth * 0.6
+        self.minheight_middle_area_top = self.maxheight * 0.7
+        self.maxheight_middle_area_top = self.maxheight * 1
+
+        if (self.counter_boos < 10 and not self.boos_worden_bool and not self.sad_worden_bool and
+           touch_x > self.minwidth_middle_area_top and
+           touch_x < self.maxwidth_middle_area_top and
+           touch_y > self.minheight_middle_area_top and
+           touch_y < self.maxheight_middle_area_top):     
+                self.top_area()
+            
+    def top_area(self):
+            cp1_left = [self.maxwidth * 0.2, self.maxheight * 0.75]
+            cp2_left = [self.maxwidth * 0.3, self.maxheight * 0.80]
+            cp3_left = [self.maxwidth * 0.4, self.maxheight * 0.82]
+            cp1_right = [self.maxwidth * 0.8, self.maxheight * 0.75]
+            cp2_right = [self.maxwidth * 0.7, self.maxheight * 0.80]
+            cp3_right = [self.maxwidth * 0.6, self.maxheight * 0.82]
+
+            self.bendlines.animate_control_points(cp1_left, cp2_left, cp3_left, cp1_right, cp2_right, cp3_right, 0.1)
+            self.start_timer_reactie_areas(instance=None)
+            self.reset_timer_reactie_areas() 
+
+             
+        #Timer voor de rechts en links area reset 
+    def start_timer_reactie_areas(self, instance): 
+        self.time_limit_reactie_areas = 1
+        self.start_time_reactie_areas = time.time()      
+        self.elapsed_time_reactie_areas = 0
+        Clock.unschedule(self.update_timer_reactie_areas)
+        Clock.schedule_interval(self.update_timer_reactie_areas, 0.1)
+
+    def reset_timer_reactie_areas(self):
+        self.start_time_reactie_areas = time.time()
+
+    def update_timer_reactie_areas(self, dt):
+        current_time_reactie_areas = time.time()
+        elapsed_time_reactie_areas = current_time_reactie_areas - self.start_time_reactie_areas
+
+        if elapsed_time_reactie_areas > self.time_limit_reactie_areas:
+            Clock.unschedule(self.update_timer_reactie_areas)
+            self.boos_worden_rechts_link = False
+            self.noreactie()
+
+    #Boos reactie
     #Emotions/Reaction Yeaaaa     
     def boos_reactie(self, touch):
         touch_x, touch_y = touch.pos
@@ -584,7 +715,7 @@ class MyFloatLayout(FloatLayout):
         elapsed_time_reactie_boos = current_time_reactie_boos - self.start_time_reactie_boos
 
         if elapsed_time_reactie_boos > self.time_limit_reactie_boos:
-            self.counter_boos = 0
+            self.counter_boos = 0 
             Clock.unschedule(self.update_timer_reactie_boos)
             self.boos_worden_bool = False
             self.noreactie()
@@ -620,10 +751,10 @@ class MyFloatLayout(FloatLayout):
 
         #Wenkbrouw
         cp1_left = [self.maxwidth * 0.2, self.maxheight * 0.75]
-        cp2_left = [self.maxwidth * 0.3, self.maxheight * 0.75]
+        cp2_left = [self.maxwidth * 0.3, self.maxheight * 0.85]
         cp3_left = [self.maxwidth * 0.4, self.maxheight * 0.75]
         cp1_right = [self.maxwidth * 0.8, self.maxheight * 0.75]
-        cp2_right = [self.maxwidth * 0.7, self.maxheight * 0.75]
+        cp2_right = [self.maxwidth * 0.7, self.maxheight * 0.85]
         cp3_right = [self.maxwidth * 0.6, self.maxheight * 0.75]
         self.bendlines.animate_control_points(cp1_left, cp2_left, cp3_left, cp1_right, cp2_right, cp3_right, 0.1)
 

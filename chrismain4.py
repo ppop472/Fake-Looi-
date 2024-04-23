@@ -23,17 +23,18 @@ class LeftEye(Widget):
         super().__init__(**kwargs)
                 
         Window.maximize()
+        Window.fullscreen = True
         maxSize = Window.system_size
         desiredSize = (maxSize[0]*1, maxSize[1]*1)
         desiredRadius = maxSize[0] * 0.1
         Window.size = desiredSize
+        
 
         self.maxwidth = maxSize[0]
         self.desiredwidth = maxSize[0] * 0.1
 
         self.maxheight = maxSize[1]
         self.desiredheight = maxSize[1] * 0.1
-
         self.radius = desiredRadius
 
         with self.canvas:
@@ -245,7 +246,7 @@ class Assests(Widget):
 class MyFloatLayout(FloatLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
+        Window.fullscreen = True
         self.img = Image(source ='angry anime logo.png') 
 
         # AFK / VERDRIETIGE emotie/reactie

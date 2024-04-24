@@ -1,5 +1,3 @@
-# from kivy.config import Config
-# Config.set('input', 'mouse', 'mouse,disable_multitouch')
 from kivy.app import App
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.widget import Widget
@@ -380,8 +378,15 @@ class MyFloatLayout(FloatLayout):
         self.middle_area_reactie(touch)
         self.top_area_reactie(touch)
         self.bottom_area_reactie(touch)
+        self.link_boveneyes_reactie(touch)
+        self.rechts_boveneyes_reactie(touch)
+        self.links_ondereyes_reactie(touch)
+        self.rechts_ondereyes_reactie(touch)
 
     def on_touch_move(self, touch):
+        touch_x, touch_y = touch.pos
+        print(touch.pos)
+
         self.restart_idle_timer(instance=None)
         self.start_timer(instance=None)
         self.reset_timer()
@@ -392,12 +397,20 @@ class MyFloatLayout(FloatLayout):
         if self.sad_worden_bool:
             self.noreactie()
 
+    #Test timer voor de on touch move voor elke 0.5sec 1 input niet elke milisecond
+
+    def start_timer_ontouchmove(self, touch):
+        Clock.schedule_interval(self.printpos, 0.1)
+
+    def printpos(self, touch):
+        touch_x, touch_y = touch.pos
+        print(touch.pos)
+
     #Timer voor de pupilen
     def start_timer(self, instance): 
-        self.time_limit = 2
+        self.time_limit = 1
         self.start_time = time.time()     
         self.elapsed_time = 0
-        self.start_time = time.time()
         Clock.unschedule(self.update_timer)
         Clock.schedule_interval(self.update_timer, 0.1)
 
@@ -575,19 +588,126 @@ class MyFloatLayout(FloatLayout):
                 self.top_area()
             
     def top_area(self):
-            cp1_left = [self.maxwidth * 0.2, self.maxheight * 0.75]
-            cp2_left = [self.maxwidth * 0.3, self.maxheight * 0.80]
-            cp3_left = [self.maxwidth * 0.4, self.maxheight * 0.82]
-            cp1_right = [self.maxwidth * 0.8, self.maxheight * 0.75]
-            cp2_right = [self.maxwidth * 0.7, self.maxheight * 0.80]
-            cp3_right = [self.maxwidth * 0.6, self.maxheight * 0.82]
+        cp1_left = [self.maxwidth * 0.2, self.maxheight * 0.75]
+        cp2_left = [self.maxwidth * 0.3, self.maxheight * 0.80]
+        cp3_left = [self.maxwidth * 0.4, self.maxheight * 0.82]
+        cp1_right = [self.maxwidth * 0.8, self.maxheight * 0.75]
+        cp2_right = [self.maxwidth * 0.7, self.maxheight * 0.80]
+        cp3_right = [self.maxwidth * 0.6, self.maxheight * 0.82]
 
-            self.bendlines.animate_control_points(cp1_left, cp2_left, cp3_left, cp1_right, cp2_right, cp3_right, 0.1)
-            self.start_timer_reactie_areas(instance=None)
-            self.reset_timer_reactie_areas() 
+        self.bendlines.animate_control_points(cp1_left, cp2_left, cp3_left, cp1_right, cp2_right, cp3_right, 0.1)
+        self.start_timer_reactie_areas(instance=None)
+        self.reset_timer_reactie_areas() 
 
-             
-        #Timer voor de rechts en links area reset 
+    #Links boven de ogen
+    def link_boveneyes_reactie(self, touch):
+        touch_x, touch_y = touch.pos
+
+        self.minwidth_links_boveneyes = self.maxwidth * 0.2
+        self.maxwidth_links_boveneyes = self.maxwidth * 0.4
+        self.minheight_links_boveneyes = self.maxheight * 0.7
+        self.maxheight_links_boveneyes = self.maxheight * 1
+
+        if (self.counter_boos < 10 and not self.boos_worden_bool and not self.sad_worden_bool and
+            touch_x > self.minwidth_links_boveneyes and
+            touch_x < self.maxwidth_links_boveneyes and
+            touch_y > self.minheight_links_boveneyes and
+            touch_y < self.maxheight_links_boveneyes):
+                self.link_boveneyes()
+
+    def link_boveneyes(self):
+        cp1_left = [self.maxwidth * 0.2, self.maxheight * 0.75]
+        cp2_left = [self.maxwidth * 0.3, self.maxheight * 0.78]
+        cp3_left = [self.maxwidth * 0.4, self.maxheight * 0.75]
+        cp1_right = [self.maxwidth * 0.8, self.maxheight * 0.75]
+        cp2_right = [self.maxwidth * 0.7, self.maxheight * 0.85]
+        cp3_right = [self.maxwidth * 0.6, self.maxheight * 0.75]
+        self.bendlines.animate_control_points(cp1_left, cp2_left, cp3_left, cp1_right, cp2_right, cp3_right, 0.1)
+        self.start_timer_reactie_areas(instance=None)
+        self.reset_timer_reactie_areas()
+
+    #Rechts boven de ogen
+    def rechts_boveneyes_reactie(self, touch):
+        touch_x, touch_y = touch.pos
+
+        self.minwidth_rechts_boveneyes = self.maxwidth * 0.6
+        self.maxwidth_rechts_boveneyes = self.maxwidth * 0.8
+        self.minheight_rechts_boveneyes = self.maxheight * 0.7
+        self.maxheight_rechts_boveneyes = self.maxheight * 1
+
+        if (self.counter_boos < 10 and not self.boos_worden_bool and not self.sad_worden_bool and
+            touch_x > self.minwidth_rechts_boveneyes and
+            touch_x < self.maxwidth_rechts_boveneyes and
+            touch_y > self.minheight_rechts_boveneyes and
+            touch_y < self.maxheight_rechts_boveneyes):
+                self.rechts_boveneyes()
+
+    def rechts_boveneyes(self):
+        cp1_left = [self.maxwidth * 0.2, self.maxheight * 0.75]
+        cp2_left = [self.maxwidth * 0.3, self.maxheight * 0.85]
+        cp3_left = [self.maxwidth * 0.4, self.maxheight * 0.75]
+        cp1_right = [self.maxwidth * 0.8, self.maxheight * 0.75]
+        cp2_right = [self.maxwidth * 0.7, self.maxheight * 0.78]
+        cp3_right = [self.maxwidth * 0.6, self.maxheight * 0.75]
+        self.bendlines.animate_control_points(cp1_left, cp2_left, cp3_left, cp1_right, cp2_right, cp3_right, 0.1)
+        self.start_timer_reactie_areas(instance=None)
+        self.reset_timer_reactie_areas()
+
+    #Links onder de oog
+    def links_ondereyes_reactie(self, touch):
+        touch_x, touch_y = touch.pos
+
+        self.minwidth_links_ondereyes = self.maxwidth * 0.2
+        self.maxwidth_links_ondereyes = self.maxwidth * 0.4
+        self.minheight_links_ondereyes = self.maxheight * 0
+        self.maxheight_links_ondereyes = self.maxheight * 0.3
+
+        if (self.counter_boos < 10 and not self.boos_worden_bool and not self.sad_worden_bool and
+            touch_x > self.minwidth_links_ondereyes and
+            touch_x < self.maxwidth_links_ondereyes and
+            touch_y > self.minheight_links_ondereyes and
+            touch_y < self.maxheight_links_ondereyes):
+                self.links_ondereyes()
+
+    def links_ondereyes(self):
+        cp1_left = [self.maxwidth * 0.2, self.maxheight * 0.75]
+        cp2_left = [self.maxwidth * 0.3, self.maxheight * 0.70]
+        cp3_left = [self.maxwidth * 0.4, self.maxheight * 0.75]
+        cp1_right = [self.maxwidth * 0.8, self.maxheight * 0.75]
+        cp2_right = [self.maxwidth * 0.7, self.maxheight * 0.85]
+        cp3_right = [self.maxwidth * 0.6, self.maxheight * 0.75]
+        self.bendlines.animate_control_points(cp1_left, cp2_left, cp3_left, cp1_right, cp2_right, cp3_right, 0.1)
+        self.start_timer_reactie_areas(instance=None)
+        self.reset_timer_reactie_areas()
+
+    #Rechts onder de oog
+    def rechts_ondereyes_reactie(self, touch):
+        touch_x, touch_y = touch.pos
+
+        self.minwidth_rechts_ondereyes = self.maxwidth * 0.6
+        self.maxwidth_rechts_ondereyes = self.maxwidth * 0.8
+        self.minheight_rechts_ondereyes = self.maxheight * 0
+        self.maxheight_rechts_ondereyes = self.maxheight * 0.3
+
+        if (self.counter_boos < 10 and not self.boos_worden_bool and not self.sad_worden_bool and
+            touch_x > self.minwidth_rechts_ondereyes and
+            touch_x < self.maxwidth_rechts_ondereyes and
+            touch_y > self.minheight_rechts_ondereyes and
+            touch_y < self.maxheight_rechts_ondereyes):
+                self.rechts_ondereyes()
+
+    def rechts_ondereyes(self):
+        cp1_left = [self.maxwidth * 0.2, self.maxheight * 0.75]
+        cp2_left = [self.maxwidth * 0.3, self.maxheight * 0.85]
+        cp3_left = [self.maxwidth * 0.4, self.maxheight * 0.75]
+        cp1_right = [self.maxwidth * 0.8, self.maxheight * 0.75]
+        cp2_right = [self.maxwidth * 0.7, self.maxheight * 0.70]
+        cp3_right = [self.maxwidth * 0.6, self.maxheight * 0.75]
+        self.bendlines.animate_control_points(cp1_left, cp2_left, cp3_left, cp1_right, cp2_right, cp3_right, 0.1)
+        self.start_timer_reactie_areas(instance=None)
+        self.reset_timer_reactie_areas()
+
+        #Timer voor de areas 
     def start_timer_reactie_areas(self, instance): 
         self.time_limit_reactie_areas = 1
         self.start_time_reactie_areas = time.time()      
